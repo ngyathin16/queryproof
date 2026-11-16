@@ -6,7 +6,7 @@ A local workbench for analysts reviewing SQL business metrics. Compare a query w
 
 ![A running QueryProof review showing 1,110 USD from the original query, 400 USD from the independent reference, and duplicated-order evidence](docs/screenshots/review-1440.png)
 
-[Watch the captioned walkthrough](https://raw.githubusercontent.com/ngyathin16/queryproof/main/docs/walkthrough.mp4) · [Read the captions](docs/walkthrough.vtt)
+[Watch the captioned walkthrough](https://raw.githubusercontent.com/ngyathin16/queryproof/main/docs/walkthrough.mp4) · [Read the captions](docs/walkthrough.vtt) · [Interface design](docs/DESIGN.md)
 
 ## Run locally
 

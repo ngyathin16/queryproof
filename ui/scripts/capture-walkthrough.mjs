@@ -19,7 +19,7 @@ async function caption(text) {
     let overlay = document.getElementById('walkthrough-caption');
     if (!overlay) {
       overlay = document.createElement('div'); overlay.id = 'walkthrough-caption';
-      overlay.style.cssText = 'position:fixed;z-index:99999;bottom:22px;left:50%;transform:translateX(-50%);max-width:1000px;width:max-content;padding:16px 26px;background:rgba(23,47,40,.97);color:#fff;border:1px solid #61796f;border-radius:8px;font:17px/1.55 system-ui;text-align:center;box-shadow:0 6px 30px #0002;pointer-events:none';
+      overlay.style.cssText = 'position:fixed;z-index:99999;bottom:22px;left:50%;transform:translateX(-50%);max-width:min(1000px,calc(100vw - 48px));width:max-content;padding:16px 24px;background:rgba(24,27,29,.98);color:#f1f3eb;border:1px solid #444a4c;border-left:4px solid #d7f46b;border-radius:0;font:17px/1.55 "IBM Plex Sans",system-ui,sans-serif;text-align:center;box-shadow:0 8px 24px #0005;pointer-events:none';
       document.body.append(overlay);
     }
     overlay.textContent = text;

@@ -1,5 +1,13 @@
 # Change record
 
+## 16 November 2026 — distinct analytical interface
+
+- Compared graphite, cobalt, and ledger design studies, then replaced the cream/green interface with a graphite workbench, lime actions, cyan references, and amber findings.
+- Added IBM Plex typography, a bracket-and-equals identity, horizontal dataset/metric context, and side-by-side SQL and evidence.
+- Placed witness rows before expandable diagnostic SQL and moved Run review above the editor.
+- Preserved the working review, revision, import, history, export, and optional provider flows. The engine and model evaluation are unchanged.
+- Passed the TypeScript/production build and 21 browser checks, including 12 responsive accessibility views at 360, 768, and 1440 px. Refreshed screenshots and the captioned walkthrough.
+
 ## 16 November 2026 — initial workbench implementation
 
 - Added local CSV snapshots, explicit metric contracts and bounded SQL review.

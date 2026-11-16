@@ -1,6 +1,6 @@
 # Walkthrough recording
 
-The 80.84-second video shows a real browser session against the local application using the fictional commerce fixture. Captions were overlaid while recording; they are also available as WebVTT. No model response or analysis outcome was mocked for this recording.
+The 80.68-second video shows a real browser session against the local application using the fictional commerce fixture. Captions were overlaid while recording; they are also available as WebVTT. No model response or analysis outcome was mocked for this recording.
 
 - [Browser-friendly MP4](https://raw.githubusercontent.com/ngyathin16/queryproof/main/docs/walkthrough.mp4)
 - [Original Playwright WebM](walkthrough.webm)
@@ -17,4 +17,4 @@ Equivalent command with FFmpeg installed:
 ffmpeg -i docs/walkthrough.webm -c:v libx264 -threads 2 -preset fast -crf 23 -pix_fmt yuv420p -movflags +faststart docs/walkthrough.mp4
 ```
 
-The MP4 was decoded and its frame at 39 seconds inspected after conversion. The video is a recorded walkthrough, not an interactive hosted backend or evidence of human usability testing.
+The complete MP4 decoded successfully, and browser playback confirmed its 80.68-second duration at 1440 × 1000 pixels. The inspected frame at 39 seconds shows the checked revision at 400 USD, the original at 1,110 USD, all five checks passing, and a readable caption. The video is a recorded walkthrough, not an interactive hosted backend or evidence of human usability testing.

@@ -1,33 +1,33 @@
 WEBVTT
 
 1
-00:00:00.301 --> 00:00:08.909
+00:00:00.280 --> 00:00:08.900
 QueryProof reviews SQL against an explicit metric definition. This is the real local application, using fictional commerce data.
 
 2
-00:00:08.909 --> 00:00:17.009
+00:00:08.900 --> 00:00:17.009
 The query reports 1,110 USD. The independent row calculation gives 400 USD. These values were calculated from this snapshot.
 
 3
-00:00:17.009 --> 00:00:26.056
+00:00:17.009 --> 00:00:26.065
 Three orders contribute more than once. Each finding includes the contract clause, a reproducible diagnostic query, and bounded example rows.
 
 4
-00:00:26.056 --> 00:00:35.519
+00:00:26.065 --> 00:00:35.536
 Inspect the original and proposed SQL side by side. This deterministic suggestion preserves the metric definition; it has not been accepted.
 
 5
-00:00:35.519 --> 00:00:44.040
+00:00:35.536 --> 00:00:44.030
 The revision executes against the same snapshot. Its total is 400 USD, all checks pass, and the intended population is preserved.
 
 6
-00:00:44.040 --> 00:00:53.055
+00:00:44.030 --> 00:00:53.051
 Only a checked revision can be accepted. The original review remains in history. Passing is conditional on this contract and snapshot.
 
 7
-00:00:53.055 --> 00:01:02.039
+00:00:53.051 --> 00:01:02.049
 Export a readable HTML report or JSON evidence packet. Raw input rows are excluded; finding examples require an explicit choice.
 
 8
-00:01:02.039 --> 00:01:20.840
+00:01:02.049 --> 00:01:20.680
 Saved reviews retain their SQL, contract, snapshot identity, and findings. Optional live-model assistance is separate from deterministic evidence.

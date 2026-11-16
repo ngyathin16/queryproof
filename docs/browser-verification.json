@@ -1,12 +1,14 @@
 {
-  "captured_at": "2026-11-16T05:01:50.662Z",
+  "captured_at": "2026-11-16T06:50:25.763Z",
   "browser": "157.0.4341.57",
   "platform": "win32",
   "base": "http://127.0.0.1:4317",
   "checks": [
     "Keyboard skip link focuses the workbench",
     "initial: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
+    "Dataset schema and metric definition disclosures open and close from the keyboard",
     "Real join review: 1,110 versus 400 USD; three duplicated entity witnesses",
+    "Witness rows stay visible while diagnostic SQL can be opened and closed from the keyboard",
     "review: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
     "assistance: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
     "Optional provider evidence disclosure and server-only key setup; no assistance without consent",
