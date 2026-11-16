@@ -1,0 +1,164 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
+import AxeBuilder from '@axe-core/playwright';
+
+const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:4317';
+const output = new URL('../../docs/screenshots/', import.meta.url);
+const reportPath = new URL('../../docs/browser-verification.json', import.meta.url);
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_EXECUTABLE ? { executablePath: process.env.BROWSER_EXECUTABLE } : process.platform === 'win32' ? { channel: 'msedge' } : {}) });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+const page = await context.newPage();
+page.setDefaultTimeout(30_000);
+const report = { captured_at: new Date().toISOString(), browser: browser.version(), platform: process.platform, base, checks: [], views: [], errors: [], external_requests: [], passed: false };
+page.on('pageerror', error => report.errors.push(error.message));
+page.on('request', request => { if (new URL(request.url()).origin !== new URL(base).origin) report.external_requests.push(request.url()); });
+const check = name => { report.checks.push(name); process.stdout.write(`Passed: ${name}\n`); };
+async function waitReady() { await page.waitForFunction(() => !document.querySelector('button.button.primary')?.disabled); }
+async function scan(name, widths = [360, 768, 1440]) {
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.evaluate(() => document.fonts.ready);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${name} overflow at ${width}`);
+    const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    report.views.push({ name, width, violations: result.violations.map(({ id, nodes }) => ({ id, nodes: nodes.map(({ target, failureSummary }) => ({ target, failureSummary })) })) });
+    assert.deepEqual(result.violations, [], `${name} accessibility at ${width}`);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.screenshot({ path: fileURLToPath(new URL(`${name}-${width}.png`, output)), fullPage: true });
+  }
+  check(`${name}: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings`);
+}
+try {
+  await page.goto(base);
+  await waitReady();
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Skip to workbench');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'main');
+  check('Keyboard skip link focuses the workbench');
+  await scan('initial');
+  await page.getByRole('button', { name: 'Run review', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await page.getByRole('heading', { name: 'This number needs a closer look.' }).waitFor();
+  assert.match(await page.locator('.metric-grid').innerText(), /1,110[\s\S]*400[\s\S]*710/);
+  assert.equal(await page.getByRole('region', { name: 'One contribution per entity example rows' }).locator('tbody tr').count(), 3);
+  assert.match(await page.getByLabel('One contribution per entity diagnostic SQL').innerText(), /COUNT/);
+  check('Real join review: 1,110 versus 400 USD; three duplicated entity witnesses');
+  await scan('review');
+  await page.locator('.assistant-panel > summary').click();
+  await page.locator('.provider-setup > summary').click();
+  assert.equal(await page.getByRole('button', { name: 'Request live assistance' }).isDisabled(), true);
+  const provider = await (await context.request.get(`${base}/api/provider`)).json();
+  assert((await page.locator('.provider-meta').innerText()).includes(`${provider.local ? 'Local' : 'Remote'} provider: ${provider.provider}`));
+  await scan('assistance');
+  await page.locator('.assistant-panel > summary').click();
+  check('Optional provider evidence disclosure and server-only key setup; no assistance without consent');
+
+  await page.getByRole('button', { name: 'Inspect suggested repair' }).click();
+  assert.equal(await page.getByRole('button', { name: 'Accept checked revision' }).count(), 0);
+  await page.getByRole('button', { name: 'Check revision', exact: true }).click();
+  await page.waitForFunction(() => [...document.querySelectorAll('button')].some(button => button.textContent.includes('Accept checked revision') && !button.disabled));
+  assert.match(await page.locator('.candidate-summary').innerText(), /Revised total: 400 USD/);
+  await scan('revision');
+  await page.getByRole('button', { name: 'Accept checked revision' }).click();
+  await page.getByRole('heading', { name: 'The results agree.' }).waitFor();
+  check('Repair is executed and passes before acceptance; original is preserved in history');
+
+  const acceptedSQL = await page.getByLabel('SQL to review', { exact: true }).inputValue();
+  await page.getByLabel('SQL to review', { exact: true }).fill(`${acceptedSQL}\n-- changed draft`);
+  await page.getByText('Inputs changed — these are earlier results.').waitFor();
+  assert.equal(await page.getByRole('link', { name: 'HTML report' }).count(), 0);
+  await page.reload();
+  await page.getByText('Inputs changed — these are earlier results.').waitFor();
+  assert.equal(await page.getByLabel('SQL to review', { exact: true }).inputValue(), `${acceptedSQL}\n-- changed draft`);
+  await page.getByLabel('SQL to review', { exact: true }).fill(acceptedSQL);
+  check('SQL changes mark earlier evidence stale; draft and selected review survive reload');
+  await page.locator('.contract-editor > summary').click();
+  const acceptedContract = await page.getByLabel('Metric contract · JSON').inputValue();
+  await page.getByLabel('Metric contract · JSON').fill('{');
+  assert.equal(await page.getByRole('button', { name: 'Run review', exact: true }).isDisabled(), true);
+  await page.getByText('Inputs changed — these are earlier results.').waitFor();
+  await page.getByLabel('Metric contract · JSON').fill(acceptedContract);
+  await page.locator('.contract-editor > summary').click();
+  check('Invalid contract JSON disables execution and invalidates current evidence');
+
+  const jsonLink = page.getByRole('link', { name: 'JSON evidence' });
+  const href = await jsonLink.getAttribute('href');
+  const exported = await (await context.request.get(`${base}${href}`)).json();
+  assert.equal(exported.contains_example_rows, false);
+  assert(Object.values(exported.dataset.tables).every(table => !('rows' in table)), 'Export excludes raw input rows by default');
+  assert(exported.review.result.checks.every(check => check.examples.length === 0), 'Finding examples are opt-in');
+  const download = page.waitForEvent('download');
+  await page.getByRole('link', { name: 'HTML report' }).click();
+  assert.match((await download).suggestedFilename(), /\.html$/);
+  check('JSON evidence and standalone HTML report download from the real review');
+
+  await page.getByRole('button', { name: /^History/ }).click();
+  assert(await page.locator('.history-item').count() >= 2);
+  await page.locator('.history-item').first().click();
+  await page.getByRole('heading', { name: 'The results agree.' }).waitFor();
+  check('History reopens the immutable saved snapshot, contract, SQL, and result');
+  await page.getByLabel('Start with an example').selectOption('missing-definition');
+  await waitReady();
+  await page.getByRole('button', { name: 'Run review', exact: true }).click();
+  await page.getByRole('heading', { name: 'More evidence is needed.' }).waitFor();
+  assert.match(await page.locator('.result-panel').innerText(), /needs definition/);
+  check('Missing null policy is needs definition, never a passed review');
+
+  await page.getByRole('button', { name: 'Import your data' }).click();
+  const examples = await (await context.request.get(`${base}/api/examples`)).json();
+  await page.getByLabel('Manifest and data files').setInputFiles({ name: 'commerce-bundle.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(examples[0].bundle)) });
+  await page.getByText('Local data imported. Define the metric and enter your SQL.').waitFor();
+  assert.equal(await page.getByLabel('SQL to review', { exact: true }).inputValue(), '');
+  await page.locator('.contract-editor > summary').click();
+  await page.getByLabel('Metric contract · JSON').fill(JSON.stringify(examples[0].contract, null, 2));
+  await page.getByLabel('SQL to review', { exact: true }).fill(examples[0].sql);
+  await page.getByRole('button', { name: 'Run review', exact: true }).click();
+  await page.getByRole('heading', { name: 'This number needs a closer look.' }).waitFor();
+  check('JSON/CSV bundle import, explicit contract, and real review through browser boundary');
+  const averageContract = structuredClone(examples[0].contract);
+  averageContract.measure.aggregation = 'avg';
+  await page.getByLabel('Metric contract · JSON').fill(JSON.stringify(averageContract, null, 2));
+  await page.getByLabel('SQL to review', { exact: true }).fill(examples[0].sql.replace('SUM(', 'AVG(').split('\n').filter(line => !line.startsWith('LEFT JOIN')).join('\n'));
+  await page.getByRole('button', { name: 'Run review', exact: true }).click();
+  await page.getByRole('heading', { name: 'The results agree.' }).waitFor();
+  assert.equal(await page.locator('.metric-grid strong').first().innerText(), '—');
+  await page.getByText(/No additive headline total is available/).waitFor();
+  check('Grouped averages show no misleading sum; the UI explains per-group comparison');
+  const exactBundle = { manifest: { name: 'Exact decimal regression', tables: [{ name: 'orders', file: 'orders.csv', columns: [{ name: 'order_id', type: 'INTEGER' }, { name: 'revenue', type: 'DECIMAL(38,2)' }] }] }, files: { 'orders.csv': 'order_id,revenue\n1,9007199254740992.00\n' } };
+  await page.getByRole('button', { name: 'Import your data' }).click();
+  await page.getByLabel('Manifest and data files').setInputFiles({ name: 'exact-bundle.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(exactBundle)) });
+  await page.getByText('Local data imported. Define the metric and enter your SQL.').waitFor();
+  const exactContract = { ...examples[0].contract, groups: [], relationships: [], filters: [], time: { column: null, start: null, end: null, timezone: 'UTC' } };
+  await page.getByLabel('Metric contract · JSON').fill(JSON.stringify(exactContract, null, 2));
+  await page.getByLabel('SQL to review', { exact: true }).fill('SELECT SUM(o.revenue) + 1 AS revenue FROM orders o');
+  await page.getByRole('button', { name: 'Run review', exact: true }).click();
+  await page.getByRole('heading', { name: 'This number needs a closer look.' }).waitFor();
+  assert.deepEqual(await page.locator('.metric-grid strong').allTextContents(), ['9,007,199,254,740,993', '9,007,199,254,740,992', '+1']);
+  assert.equal(await page.locator('.comparison-bars').count(), 0);
+  for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `Exact totals overflow at ${width}`); }
+  check('Large decimal totals and a one-unit discrepancy remain exact in the browser; unsafe chart is omitted');
+  await page.getByRole('button', { name: 'Import your data' }).click();
+  await page.getByLabel('Manifest and data files').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{') });
+  await page.getByRole('alert').waitFor();
+  await page.getByRole('button', { name: 'Dismiss error' }).click();
+  check('Malformed JSON import produces a recoverable error');
+
+  await page.getByRole('button', { name: 'Reset example' }).click();
+  await waitReady();
+  await page.getByRole('button', { name: 'Run review', exact: true }).click();
+  await page.getByRole('button', { name: 'Cancel review', exact: true }).click();
+  await page.getByText('This review was interrupted.').waitFor();
+  assert.equal(await page.locator('.result-panel').count(), 0);
+  await page.reload();
+  await page.getByText('This review was interrupted.').waitFor();
+  check('Cancellation interrupts the real worker; reload preserves interrupted status without a result');
+  assert.deepEqual(report.errors, [], 'No JavaScript errors');
+  assert.deepEqual(report.external_requests, [], 'No third-party browser requests, including fonts');
+  report.passed = true;
+} finally {
+  await writeFile(reportPath, JSON.stringify(report, null, 2) + '\n');
+  await browser.close();
+}

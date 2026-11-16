@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "counts": {
+    "development": 60,
+    "evaluation": 60
+  },
+  "per_split": {
+    "join": 6,
+    "population": 6,
+    "date": 6,
+    "null": 6,
+    "valid": 12,
+    "definition": 12,
+    "unsupported": 12
+  },
+  "oracle": "Pure Python row filtering and Decimal aggregation in generate_cases.py; no detector or DuckDB calls.",
+  "split": "Development: compound tenant/event key, two grouping dimensions, AVG. Evaluation: order key, single grouping dimension, SUM. Shared edge-case concepts disclosed; not externally held out.",
+  "frozen_before_execution": true,
+  "unseen_claim": false
+}

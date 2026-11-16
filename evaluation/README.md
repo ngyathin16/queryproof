@@ -1,0 +1,43 @@
+# QueryProof evaluation
+
+The version-one dataset contains 60 development cases and 60 evaluation cases. The manifest and row-based expected results were written before running the detector. `manifest.json` pins the exact file hash; the runner refuses changed cases. `generate_cases.py` refuses to overwrite the existing freeze. Create a new version for future unseen claims.
+
+The data is fictional and was authored with AI assistance. It contains no customer records. The expected calculations use Python iteration and Decimal arithmetic, independently of SQLGlot, DuckDB, and the detection/repair implementation. Nobody has performed the PRD's independent human review; these results establish reproducible synthetic behavior, not general analytical accuracy.
+
+Each split has six join, six population, six date, six null, twelve valid, twelve underspecified, and twelve unsupported cases. Development uses compound tenant/event keys, AVG, and two grouping dimensions; evaluation predominantly uses order keys, SUM, and one grouping dimension. Both share concepts and portions of the fixture schema. This is a useful regression suite, but does **not** fully establish the PRD's stronger structural holdout requirement. Cases inspected during implementation are regression evidence afterward.
+
+```sh
+uv run python scripts/evaluate.py --split development
+uv run python scripts/evaluate.py --split evaluation
+uv run python scripts/evaluate.py --smoke
+uv run python scripts/evaluate.py --models
+```
+
+The default runs need no model. The smoke command adds one live trial in each mode. The full model command runs every one of the 24 incorrect evaluation cases, three trials in each mode (144 trials total), regardless of detector success. It defaults to local Ollama and the configured `QUERYPROOF_MODEL` (default `qwen3.5:9b`); it never downloads a model. Hosted providers require explicit environment configuration and the additional `--allow-hosted` flag; see [model setup](../docs/MODEL-SETUP.md). No hosted calls were made for the recorded local evaluation.
+
+Both modes receive the same task, SQL, schema, contract, grammar, temperature zero, trial seed, 8,192-token context, 2,048 generated-token cap, and 60-second assistance cap. Tools mode can inspect the contract/schema, inspect a finding, or evaluate a proposed revision, with at most eight diagnostic calls. Responses are structured JSON tool actions; the adapter executes them, then returns bounded evidence. The final revision is validated and executed in both modes. Input token totals are reported and may differ due to tool evidence. This is a generated-token cap, not an equal total-input-token experiment.
+
+Temperature zero often produces identical proposals across repeated trials. These are descriptive counts under one local model/configuration, not independent samples supporting a statistical significance or generalization claim. The runner retains different seed labels and repeated failures rather than selecting the best trial.
+
+Every trial is appended to `model-trials.jsonl`, including malformed output, timeout, cancellation, missing models, and unsuccessful proposals. Hidden grading compares complete group results with Decimal tolerances and the distinct base-entity population derived from the executed revision's joins/filters. A matching grand total alone does not pass. Expected answers and known solutions are not sent to the model. The final model summary retains all trials in the denominator.
+
+Results are newly timestamped directories; existing outputs are never overwritten. Environment, hash, all detector outputs, per-family confusion counts, model actions, time, and provider-reported token usage remain inspectable. Re-running after code changes creates regression evidence, not a fresh holdout claim.
+
+`initial-smoke`, `development-first`, and `full-model-comparison` are exploratory implementation runs. Source files were still changing; they do not represent a single committed implementation. Later final runs record the Git revision, tracked changes, and SHA-256 of each Python module. Preserve the exploratory failures; use the final recorded revision for reproducible result claims.
+
+## Explanation review rubric
+
+Human reviewers should independently score every completed explanation:
+
+- **Supported**: each factual claim follows from an executed finding; no invented IDs or measurements.
+- **Intent preserved**: the explanation does not redefine the metric, erase a group, or change its intended population.
+- **Limits stated**: the wording is conditional on this snapshot and contract; successful execution is not described as universal proof.
+- **Actionable**: explains which query operation changed and why.
+
+Record each dimension as pass/fail/unclear, keep the original explanation, and report counts including incomplete trials. The adapter rejects unknown evidence IDs and numeric values absent from inspected evidence. Those automatic checks cannot validate all prose and **do not replace human rubric review**. No human explanation review or user study has been performed.
+
+## Current limitations
+
+The case suite does not yet cover every relationship topology, legitimate repeated stable keys at an alternative declared grain, coincidental totals with compensating positive/negative errors, all ratio definitions, or near-boundary incorrect floating-point comparisons. A passing suite does not close these PRD acceptance gaps. Timing these tiny fixtures is not the required 100,000-row performance benchmark.
+
+The adapter was implemented against the [official Ollama API specification](https://github.com/ollama/ollama/blob/main/docs/openapi.yaml), with live behavior checked locally. AI assistance is optional; a failed model run leaves deterministic evidence available.

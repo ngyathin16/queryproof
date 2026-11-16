@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+node_modules/
+ui/dist/
+.env
+.env.*
+!.env.example
+artifacts/
+*.egg-info/
