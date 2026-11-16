@@ -1,0 +1,94 @@
+[
+  {
+    "model": "qwen3.5:9b",
+    "ms": 406.00000001722947,
+    "response": {
+      "model": "qwen3.5:9b",
+      "created_at": "2026-11-16T03:57:08.5657629Z",
+      "message": {
+        "role": "assistant",
+        "content": "{\"ready\":true}"
+      },
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 389034300,
+      "load_duration": 4904400,
+      "prompt_eval_count": 21,
+      "prompt_eval_cached_count": 0,
+      "prompt_eval_duration": 264507999,
+      "eval_count": 6,
+      "eval_duration": 52313000
+    },
+    "loaded_models": {
+      "models": [
+        {
+          "name": "qwen3.5:9b",
+          "model": "qwen3.5:9b",
+          "size": 5862210928,
+          "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen35",
+            "families": [
+              "qwen35"
+            ],
+            "parameter_size": "9.0B",
+            "quantization_level": "Q4_K_M"
+          },
+          "expires_at": "2026-11-16T12:07:08.5657629+08:00",
+          "size_vram": 5862210928,
+          "context_length": 8192,
+          "runner": "llamacpp"
+        }
+      ]
+    },
+    "gpu": "NVIDIA GeForce RTX 5080, 16303 MiB, 7711 MiB, 3 %"
+  },
+  {
+    "model": "lfm2.5:8b",
+    "ms": 17297.00000002049,
+    "response": {
+      "model": "lfm2.5:8b",
+      "created_at": "2026-11-16T03:57:25.9511724Z",
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"status\": \"completed\",\n  \"message\": \"All tasks completed successfully.\"\n}"
+      },
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 17276653700,
+      "load_duration": 13037530000,
+      "prompt_eval_count": 18,
+      "prompt_eval_cached_count": 0,
+      "prompt_eval_duration": 4159473000,
+      "eval_count": 21,
+      "eval_duration": 75770000
+    },
+    "loaded_models": {
+      "models": [
+        {
+          "name": "lfm2.5:8b",
+          "model": "lfm2.5:8b",
+          "size": 5386734140,
+          "digest": "9cf756159fc2f3b9128c6a3f544ec90c5e9b8afdbb4179a57b8aea9de589cfb2",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "lfm2moe",
+            "families": [
+              "lfm2moe"
+            ],
+            "parameter_size": "8.5B",
+            "quantization_level": "Q4_K_M"
+          },
+          "expires_at": "2026-11-16T12:07:25.9511724+08:00",
+          "size_vram": 5386734140,
+          "context_length": 8192,
+          "runner": "llamacpp"
+        }
+      ]
+    },
+    "gpu": "NVIDIA GeForce RTX 5080, 16303 MiB, 6333 MiB, 1 %"
+  }
+]

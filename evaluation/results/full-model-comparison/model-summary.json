@@ -1,0 +1,18 @@
+{
+  "complete_acceptance_comparison": true,
+  "cases": 24,
+  "trials_per_case_per_mode": 3,
+  "modes": {
+    "baseline": {
+      "successful_repairs": 24,
+      "trials": 72,
+      "failed_assistance": 9
+    },
+    "tools": {
+      "successful_repairs": 42,
+      "trials": 72,
+      "failed_assistance": 15
+    }
+  },
+  "human_explanation_review": "not performed; automatic numeric/citation checks only"
+}

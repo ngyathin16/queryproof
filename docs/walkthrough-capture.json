@@ -1,0 +1,48 @@
+{
+  "captured_at": "2026-11-16T03:55:51.789Z",
+  "duration_seconds": 80.84,
+  "browser": "157.0.4341.57",
+  "platform": "win32",
+  "base": "http://127.0.0.1:4317",
+  "mode": "Recorded real deterministic workflow; captions overlaid during capture",
+  "captions": [
+    {
+      "start": 0.3012534999999999,
+      "text": "QueryProof reviews SQL against an explicit metric definition. This is the real local application, using fictional commerce data."
+    },
+    {
+      "start": 8.9090795,
+      "text": "The query reports 1,110 USD. The independent row calculation gives 400 USD. These values were calculated from this snapshot."
+    },
+    {
+      "start": 17.009729,
+      "text": "Three orders contribute more than once. Each finding includes the contract clause, a reproducible diagnostic query, and bounded example rows."
+    },
+    {
+      "start": 26.056867999999998,
+      "text": "Inspect the original and proposed SQL side by side. This deterministic suggestion preserves the metric definition; it has not been accepted."
+    },
+    {
+      "start": 35.519874200000004,
+      "text": "The revision executes against the same snapshot. Its total is 400 USD, all checks pass, and the intended population is preserved."
+    },
+    {
+      "start": 44.0400959,
+      "text": "Only a checked revision can be accepted. The original review remains in history. Passing is conditional on this contract and snapshot."
+    },
+    {
+      "start": 53.0556238,
+      "text": "Export a readable HTML report or JSON evidence packet. Raw input rows are excluded; finding examples require an explicit choice."
+    },
+    {
+      "start": 62.0399222,
+      "text": "Saved reviews retain their SQL, contract, snapshot identity, and findings. Optional live-model assistance is separate from deterministic evidence."
+    }
+  ],
+  "workflow_wall_seconds": 72.0062653,
+  "media": {
+    "duration": 80.84,
+    "width": 1440,
+    "height": 1000
+  }
+}

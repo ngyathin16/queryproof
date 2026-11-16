@@ -1,0 +1,296 @@
+{
+  "manifest_sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "method": "Execute each known solution in restricted DuckDB, compare independent row-oracle groups and selected base population. Does not invoke engine.review.",
+  "passed": 48,
+  "total": 48,
+  "records": [
+    {
+      "id": "development-join-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-join-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-population-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-date-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "evaluation-null-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    }
+  ]
+}

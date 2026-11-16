@@ -1,0 +1,10 @@
+{
+  "started_at": "2026-11-16T03:45:31.189162+00:00",
+  "manifest_sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "split": "development",
+  "case_count": 60,
+  "provider": null,
+  "evaluation_status": "development regression evidence after first inspection; no unseen claim"
+}

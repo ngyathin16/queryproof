@@ -1,0 +1,108 @@
+{
+  "started_at": "2026-11-16T03:57:07.858694+00:00",
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cpu": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+  "logical_cpus": 24,
+  "gpu_before": "NVIDIA GeForce RTX 5080, 16303 MiB, 7711 MiB, 4 %",
+  "git_revision": "HEAD",
+  "ollama_version": {
+    "version": "0.40.16"
+  },
+  "models": {
+    "lfm2.5:8b": {
+      "name": "lfm2.5:8b",
+      "model": "lfm2.5:8b",
+      "modified_at": "2026-11-16T11:56:52.1474044+08:00",
+      "size": 5156075525,
+      "digest": "9cf756159fc2f3b9128c6a3f544ec90c5e9b8afdbb4179a57b8aea9de589cfb2",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "lfm2moe",
+        "families": [
+          "lfm2moe"
+        ],
+        "parameter_size": "8.5B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 128000,
+        "embedding_length": 2048,
+        "runner": "ggml"
+      },
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ]
+    },
+    "qwen3.5:9b": {
+      "name": "qwen3.5:9b",
+      "model": "qwen3.5:9b",
+      "modified_at": "2026-11-02T12:13:30.7546065+08:00",
+      "size": 6550825550,
+      "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+      "details": {
+        "parent_model": "model.gguf",
+        "format": "gguf",
+        "family": "qwen35",
+        "families": [
+          "qwen35"
+        ],
+        "parameter_size": "9.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 262144,
+        "embedding_length": 4096,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools",
+        "thinking"
+      ]
+    }
+  },
+  "cases": [
+    "development-join-01",
+    "development-join-06",
+    "development-population-01",
+    "development-population-06",
+    "development-date-01",
+    "development-date-06",
+    "development-null-01",
+    "development-null-06"
+  ],
+  "manifest_sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "source_sha256": {
+    "queryproof/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "queryproof/engine.py": "84c77dd621f50425ce0a0e43e305ef9df73ccf41fa90e0f1b4e1835b9ef0c421",
+    "queryproof/fixtures.py": "255b8aba60777ee202d9fb3283df50e646edbdc5242f4751f70f5f5a41980b20",
+    "queryproof/importer.py": "61f9469792df240a8cb7b828b1319c9d83e3466607e0f6dae6387ab31c713c4b",
+    "queryproof/provider.py": "3df8884f209d45e368d50d779593a94525aad24c5e7973611baab59291d60a7e",
+    "queryproof/report.py": "e283836821c83df90755587b2bd3b7ef44a8c1153b371466a5d63c1b9cf64207",
+    "queryproof/server.py": "e51fc60cbd0de53b2ef1b857d9d883e1d9b327e6db6af6f4b6b6b71f97af66e3",
+    "queryproof/sql.py": "2db3cb31dc31207b6676df241e777ae8866b4ba5791bca5d5424929a015361ff",
+    "queryproof/store.py": "d091b4c8076f182117933504f0180fbe824217645d5ef0618158b85546816f2a",
+    "queryproof/worker.py": "2aaabda9aaf73bbb47d932cb501d56420345496c951a909e0cf91de4806f448b",
+    "scripts/compare_models.py": "2b640f21de5c78436ecb89476dbc9c1440fe6a6bd1ee2860db577017a401c25e",
+    "scripts/evaluate.py": "6d3898d325dbb317db8316a4462921d8ea03dc478242c97dc2c4e0bc2f5153b8"
+  },
+  "decision_rule": "Prefer the smaller local model if it matches or exceeds successful executed repairs on this development sample and has lower median latency. Otherwise retain the existing model. A small synthetic sample cannot establish general model superiority.",
+  "settings": {
+    "mode": "tools",
+    "trials_per_case": 3,
+    "temperature": 0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "think": false,
+    "context": 8192,
+    "output_tokens": 2048,
+    "tool_calls": 8,
+    "seconds": 60
+  },
+  "timing": "End-to-end assist() wall time, includes model rounds and deterministic tool execution. Hidden grading runs afterwards. Models are preloaded once; each case/trial alternates model order to reduce drift. Failures remain in denominator and latency summaries.",
+  "limitations": "Development cases only, selected by fixed first/last case within each family before trials. Agent-written synthetic cases, no human explanation review. Shared desktop and browser services; no concurrent evaluation inference requested."
+}

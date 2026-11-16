@@ -1,0 +1,1449 @@
+{
+  "revision": "7fd67e20442c7c4febdd80a0a44c6f8162c2b6c8",
+  "manifest_sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "method": "Each emitted diagnostic query is independently re-executed in the restricted worker; returned full row count is compared with the finding count. No detector is called.",
+  "passed": 180,
+  "total": 180,
+  "records": [
+    {
+      "case_id": "evaluation-join-01",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-01",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-01",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-01",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-01",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-02",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-02",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-02",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-02",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-02",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-03",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id LEFT JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-03",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-03",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-03",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-03",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id LEFT JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-04",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id LEFT JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-04",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-04",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-04",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-04",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id LEFT JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-05",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id INNER JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-05",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-05",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-05",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-05",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o LEFT JOIN items AS i ON o.order_id = i.order_id INNER JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-06",
+      "check_id": "grain",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id INNER JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-06",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-06",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-06",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-join-06",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, COUNT(o.revenue) AS revenue FROM orders AS o INNER JOIN items AS i ON o.order_id = i.order_id INNER JOIN touches AS t ON o.order_id = t.order_id WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", COUNT(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-01",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-01",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 4)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-01",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-01",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-01",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-02",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid', 'pending') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-02",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 4)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-02",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-02",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-02",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid', 'pending') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-03",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status = 'pending' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-03",
+      "check_id": "population",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1) OR (\"order_id\" = 2) OR (\"order_id\" = 3) OR (\"order_id\" = 4) OR (\"order_id\" = 9)",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-03",
+      "check_id": "dates",
+      "expected_count": 4,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1) OR (\"order_id\" = 2) OR (\"order_id\" = 3) OR (\"order_id\" = 9)",
+      "observed_count": 4,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-03",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-03",
+      "check_id": "results",
+      "expected_count": 3,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status = 'pending' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") IS NULL) OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 3,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-04",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.region = 'East' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-04",
+      "check_id": "population",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 3) OR (\"order_id\" = 9)",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-04",
+      "check_id": "dates",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 3) OR (\"order_id\" = 9)",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-04",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-04",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.region = 'East' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-05",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status <> 'paid' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-05",
+      "check_id": "population",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1) OR (\"order_id\" = 2) OR (\"order_id\" = 3) OR (\"order_id\" = 4) OR (\"order_id\" = 9)",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-05",
+      "check_id": "dates",
+      "expected_count": 4,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1) OR (\"order_id\" = 2) OR (\"order_id\" = 3) OR (\"order_id\" = 9)",
+      "observed_count": 4,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-05",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-05",
+      "check_id": "results",
+      "expected_count": 3,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status <> 'paid' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") IS NULL) OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 3,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-06",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.tenant_id = 1 AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-06",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 3)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-06",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 3)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-06",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-population-06",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.tenant_id = 1 AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-01",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-01",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-01",
+      "check_id": "dates",
+      "expected_count": 3,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 5) OR (\"order_id\" = 7) OR (\"order_id\" = 8)",
+      "observed_count": 3,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-01",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-01",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East') OR (COALESCE(a.\"region\", e.\"region\") = 'West')",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-02",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at > '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-02",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-02",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-02",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-02",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at > '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-03",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at <= '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-03",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-03",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-03",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-03",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at <= '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-04",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-02' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-04",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-04",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-04",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-04",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-02' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-05",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-05",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-05",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-05",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-05",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") = 'East')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-06",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-06",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-06",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 7)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-06",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-date-06",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-01",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.revenue IS NULL GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-01",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-01",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-01",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-01",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.revenue IS NULL GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-02",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.region IS NULL GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-02",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 9)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-02",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 9)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-02",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-02",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.region IS NULL GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") IS NULL)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-03",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-03",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-03",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-03",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-03",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, AVG(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", AVG(COALESCE(b.\"revenue\", 0)) AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") IS NULL)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-04",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-04",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-04",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-04",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-04",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, COUNT(*) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", COUNT(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") IS NULL)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-05",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-05",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-05",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-05",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT o.region, COUNT(*) AS observed_denominator, COUNT(o.revenue) AS expected_denominator FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region HAVING COUNT(*) <> COUNT(o.revenue)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-05",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) / COUNT(*) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", AVG(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE (COALESCE(a.\"region\", e.\"region\") IS NULL)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-06",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.region IS NULL GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-06",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 9)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-06",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 9)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-06",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE (\"order_id\" = 6)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-null-06",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.region IS NULL) AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-01",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-01",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-01",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-01",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-01",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-02",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-02",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-02",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-02",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-02",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"revenue\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-03",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-03",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-03",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-03",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-03",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", COALESCE(a.\"segment\", e.\"segment\") AS \"segment\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", \"segment\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, o.segment, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region, o.segment) AS result GROUP BY \"region\", \"segment\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", b.\"segment\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\", b.\"segment\"\nORDER BY b.\"region\", b.\"segment\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" AND a.\"segment\" IS NOT DISTINCT FROM e.\"segment\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-04",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-04",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-04",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-04",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-04",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region ORDER BY o.region DESC) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-05",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-05",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-05",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-05",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-05",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, AVG(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", AVG(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-06",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-06",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-06",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-06",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-06",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, COUNT(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", COUNT(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-07",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-07",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-07",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-07",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-07",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, COUNT(DISTINCT o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", COUNT(DISTINCT b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-08",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-08",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-08",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-08",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-08",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(COALESCE(o.revenue, 0)) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(COALESCE(b.\"revenue\", 0)) AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-09",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.revenue IS NULL GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-09",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-09",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-09",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-09",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' AND NOT o.revenue IS NULL GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01' AND \"b\".\"revenue\" IS NOT NULL\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-10",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status = 'paid' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-10",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-10",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-10",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-10",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) AS revenue FROM orders AS o WHERE o.status = 'paid' AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-11",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-11",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-11",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-11",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-11",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(CAST(o.revenue AS DECIMAL(18, 2))) AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-12",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT o.order_id, COUNT(*) AS __multiplicity FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.order_id HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-12",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-12",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-12",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"orders\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "evaluation-valid-12",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"region\", e.\"region\") AS \"region\", a.__value AS original, e.\"revenue\" AS reference FROM (SELECT \"region\", COUNT(*) AS __n, MAX(\"revenue\") AS __value FROM (SELECT o.region, SUM(o.revenue) + 0.001 AS revenue FROM orders AS o WHERE o.status IN ('paid') AND o.ordered_at >= '2026-10-01' AND o.ordered_at < '2026-11-01' GROUP BY o.region) AS result GROUP BY \"region\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"region\", SUM(b.\"revenue\") AS \"revenue\"\nFROM \"orders\" AS b\nWHERE \"b\".\"status\" IN ('paid') AND \"b\".\"ordered_at\" >= '2026-10-01' AND \"b\".\"ordered_at\" < '2026-11-01'\nGROUP BY b.\"region\"\nORDER BY b.\"region\") AS expected_result) AS e ON a.\"region\" IS NOT DISTINCT FROM e.\"region\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    }
+  ]
+}

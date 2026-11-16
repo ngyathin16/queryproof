@@ -1,0 +1,27 @@
+{
+  "verified_date": "2026-11-16",
+  "timezone": "Asia/Hong_Kong",
+  "source_revision": "7fd67e20442c7c4febdd80a0a44c6f8162c2b6c8",
+  "method": "Independent git clone, fresh dependency installs, no copied node_modules or Python environment",
+  "windows": {
+    "python": "3.12.13",
+    "node": "24.14.0",
+    "uv_sync_frozen": "passed",
+    "python_unittest_discover": {"passed": 41, "failed": 0},
+    "npm_ci": "passed",
+    "npm_run_build": "passed"
+  },
+  "linux": {
+    "environment": "Ubuntu on WSL2",
+    "python": "3.12.3",
+    "uv_sync_frozen": "passed in separate Linux environment",
+    "python_unittest_discover": {"passed": 41, "failed": 0},
+    "ui_build_and_browser": "not run on Linux"
+  },
+  "earlier_failures": [
+    "Initial parallel attempt hit host memory pressure: Python MemoryError, Node allocation failure, WSL VM crash.",
+    "After unloading the unused local comparison model, sequential fresh Windows build/tests and Linux tests passed."
+  ],
+  "credential_requirement": "None for deterministic operation or these tests",
+  "hosted_live_inference": "Not tested; no paid calls"
+}

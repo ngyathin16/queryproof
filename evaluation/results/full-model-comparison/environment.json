@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-11-16T03:45:52.693621+00:00",
+  "manifest_sha256": "5dc8478593249e7754b84232b5b86a63963918a28c9ce9f1ca935824cbdd1f65",
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "split": "evaluation",
+  "case_count": 60,
+  "provider": {
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "endpoint": "http://127.0.0.1:11434",
+    "local": true,
+    "configured": true,
+    "max_tool_calls": 8,
+    "timeout_seconds": 60,
+    "max_output_tokens": 2048,
+    "disclosure": "Only the contract, SQL, schema and requested bounded findings are sent to your local Ollama service."
+  },
+  "evaluation_status": "development regression evidence after first inspection; no unseen claim"
+}

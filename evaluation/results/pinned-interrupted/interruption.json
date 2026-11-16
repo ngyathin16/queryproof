@@ -1,0 +1,19 @@
+{
+  "status": "interrupted",
+  "observed_at": "2026-11-16T05:01:35.244304+00:00",
+  "planned_trials": 144,
+  "recorded_trials": 39,
+  "unrecorded_trials": 105,
+  "last_record": {
+    "case_id": "evaluation-population-01",
+    "mode": "baseline",
+    "trial": 1
+  },
+  "next_scheduled_trial": {
+    "case_id": "evaluation-population-01",
+    "mode": "tools",
+    "trial": 1
+  },
+  "cause": "Runner process disappeared while host had reported memory pressure; no termination traceback was captured. Cause not proven.",
+  "scoring": "Incomplete attempt; not a complete comparison. All recorded successes and failures are retained. A separate full retry follows without tuning."
+}

@@ -1,0 +1,18 @@
+{
+  "complete_acceptance_comparison": false,
+  "cases": 1,
+  "trials_per_case_per_mode": 1,
+  "modes": {
+    "baseline": {
+      "successful_repairs": 0,
+      "trials": 1,
+      "failed_assistance": 0
+    },
+    "tools": {
+      "successful_repairs": 1,
+      "trials": 1,
+      "failed_assistance": 0
+    }
+  },
+  "human_explanation_review": "not performed; automatic numeric/citation checks only"
+}

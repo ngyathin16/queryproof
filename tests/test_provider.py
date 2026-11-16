@@ -10,6 +10,11 @@ from queryproof.provider import _compact, _proposal, _request, assist, configura
 
 
 class ProviderBoundaryTests(unittest.TestCase):
+    def setUp(self):
+        environment = patch.dict(os.environ, {"QUERYPROOF_PROVIDER": "ollama", "QUERYPROOF_MODEL": "test-model", "QUERYPROOF_API_KEY": "", "QUERYPROOF_OLLAMA_URL": "http://127.0.0.1:11434"})
+        environment.start()
+        self.addCleanup(environment.stop)
+
     def serve(self, payload, status=200, location=None):
         requests = []
         self.requests = requests

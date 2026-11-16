@@ -1,0 +1,92 @@
+{
+  "captured_at": "2026-11-16T05:01:50.662Z",
+  "browser": "157.0.4341.57",
+  "platform": "win32",
+  "base": "http://127.0.0.1:4317",
+  "checks": [
+    "Keyboard skip link focuses the workbench",
+    "initial: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
+    "Real join review: 1,110 versus 400 USD; three duplicated entity witnesses",
+    "review: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
+    "assistance: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
+    "Optional provider evidence disclosure and server-only key setup; no assistance without consent",
+    "Changed-provider consent guard: mocked config boundary clears consent and sends no assistance request",
+    "revision: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",
+    "Repair is executed and passes before acceptance; original is preserved in history",
+    "SQL changes mark earlier evidence stale; draft and selected review survive reload",
+    "Invalid contract JSON disables execution and invalidates current evidence",
+    "JSON evidence and standalone HTML report download from the real review",
+    "History reopens the immutable saved snapshot, contract, SQL, and result",
+    "Missing null policy is needs definition, never a passed review",
+    "JSON/CSV bundle import, explicit contract, and real review through browser boundary",
+    "Grouped averages show no misleading sum; the UI explains per-group comparison",
+    "Large decimal totals and a one-unit discrepancy remain exact in the browser; unsafe chart is omitted",
+    "Malformed JSON import produces a recoverable error",
+    "Cancellation interrupts the real worker; reload preserves interrupted status without a result"
+  ],
+  "views": [
+    {
+      "name": "initial",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "name": "initial",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "name": "initial",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "name": "review",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "name": "review",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "name": "review",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "name": "assistance",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "name": "assistance",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "name": "assistance",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "name": "revision",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "name": "revision",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "name": "revision",
+      "width": 1440,
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "external_requests": [],
+  "passed": true
+}

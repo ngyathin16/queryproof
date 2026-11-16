@@ -1,0 +1,71 @@
+{
+  "finished_at": "2026-11-16T03:59:55.952651+00:00",
+  "selected_model": "qwen3.5:9b",
+  "source_unchanged": false,
+  "changed_sources": [
+    "queryproof/provider.py"
+  ],
+  "models": {
+    "qwen3.5:9b": {
+      "trials": 24,
+      "successful_repairs": 14,
+      "failed_assistance": 4,
+      "median_ms": 3391.0000000032596,
+      "range_ms": [
+        327.9999999795109,
+        17921.99999996228
+      ],
+      "input_tokens": 178524,
+      "output_tokens": 4850,
+      "by_family": {
+        "join": {
+          "successes": 3,
+          "trials": 6
+        },
+        "population": {
+          "successes": 0,
+          "trials": 6
+        },
+        "date": {
+          "successes": 5,
+          "trials": 6
+        },
+        "null": {
+          "successes": 6,
+          "trials": 6
+        }
+      }
+    },
+    "lfm2.5:8b": {
+      "trials": 24,
+      "successful_repairs": 0,
+      "failed_assistance": 14,
+      "median_ms": 1663.9999999897555,
+      "range_ms": [
+        452.9999999795109,
+        4437.999999965541
+      ],
+      "input_tokens": 271927,
+      "output_tokens": 10778,
+      "by_family": {
+        "join": {
+          "successes": 0,
+          "trials": 6
+        },
+        "population": {
+          "successes": 0,
+          "trials": 6
+        },
+        "date": {
+          "successes": 0,
+          "trials": 6
+        },
+        "null": {
+          "successes": 0,
+          "trials": 6
+        }
+      }
+    }
+  },
+  "interpretation": "Development selection evidence only. Same executed hidden group/population grader as full evaluation; no claim about unseen accuracy or human explanation quality."
+}
