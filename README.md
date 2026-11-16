@@ -6,7 +6,7 @@ A local workbench for analysts reviewing SQL business metrics. Compare a query w
 
 ![A running QueryProof review showing 1,110 USD from the original query, 400 USD from the independent reference, and duplicated-order evidence](docs/screenshots/review-1440.png)
 
-[Watch the captioned walkthrough](docs/walkthrough.webm) · [Read the captions](docs/walkthrough.vtt)
+[Watch the captioned walkthrough](https://raw.githubusercontent.com/ngyathin16/queryproof/main/docs/walkthrough.mp4) · [Read the captions](docs/walkthrough.vtt)
 
 ## Run locally
 
@@ -48,7 +48,7 @@ uv run python scripts/evaluate.py --help
 
 With the application running, `cd ui` and run `npm run verify` for the actual browser workflow and automated accessibility checks. It uses Edge on Windows; elsewhere install Playwright Chromium with `npx playwright install chromium`. `npm run walkthrough` captures the captioned walkthrough from the real application. These commands create test reviews in the chosen server's local history; use a separate `--data-dir` if you want to keep them apart from your own reviews.
 
-The evaluation folder contains versioned cases, independent expected results, a frozen hash and recorded outcomes. Read its manifest before using the numbers; development/regression results are not proof of unseen-case accuracy. Browser checks, screenshots and remaining release gates are recorded in [verification](docs/VERIFICATION.md).
+The evaluation folder contains versioned cases, independent expected results, a frozen hash and [recorded outcomes](evaluation/RESULTS.md). Read its manifest before using the numbers; development/regression results are not proof of unseen-case accuracy. Browser checks, screenshots and remaining release gates are recorded in [verification](docs/VERIFICATION.md).
 
 ## Architecture and limits
 

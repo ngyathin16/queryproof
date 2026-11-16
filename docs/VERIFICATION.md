@@ -14,9 +14,9 @@ The test suite covers actual CSV imports and malformed input, immutable review/e
 
 The real built interface was checked in Microsoft Edge 157.0.4341.57 using Playwright 1.65.0 and axe-core 4.14.0 on Windows. The reproducible script is `cd ui && npm run verify` against a running server; use a separate data directory for test history.
 
-[Browser results](browser-verification.json) record initial, incorrect-review, repaired-review and missing-definition views at **360, 768 and 1440 px**, with no horizontal page overflow or automated WCAG-tagged findings. Workflow checks exercise the real API: import, review, witness inspection, repair execution before acceptance, history, stale SQL/contract handling, reload, JSON/HTML export and cancellation. The provider-change consent check explicitly intercepts configuration responses and verifies no assistance request is dispatched; it is not live hosted-provider evidence. No browser exceptions or external asset requests were observed. Automated checks are not accessibility certification or human usability testing.
+[Browser results](browser-verification.json) record initial, incorrect-review, repaired-review and assistance-panel views at **360, 768 and 1440 px**, with no horizontal page overflow or automated WCAG-tagged findings. Workflow checks exercise the real API: import, review, witness inspection, repair execution before acceptance, history, stale SQL/contract handling, missing definitions, reload, JSON/HTML export and cancellation. The provider-change consent check explicitly intercepts configuration responses and verifies no assistance request is dispatched; it is not live hosted-provider evidence. No browser exceptions or external asset requests were observed. Automated checks are not accessibility certification or human usability testing.
 
-Screenshots are in [screenshots](screenshots/). The [captioned walkthrough](walkthrough.webm) records the actual fixture workflow, with [captions](walkthrough.vtt) and [capture metadata](walkthrough-capture.json). It contains a 72-second scripted story; the encoded video is approximately 81 seconds including the recorder tail. No mock success response or prerecorded chart drives the application.
+Screenshots are in [screenshots](screenshots/). The [captioned walkthrough](walkthrough.mp4) records the actual fixture workflow, with [captions](walkthrough.vtt), [capture metadata](walkthrough-capture.json) and [reproduction instructions](WALKTHROUGH.md). It contains a 72-second scripted story; the encoded video is approximately 81 seconds including the recorder tail. No mock success response or prerecorded chart drives the application.
 
 ## Evaluation
 
@@ -24,7 +24,16 @@ The [manifest](../evaluation/manifest.json) froze 60 development and 60 evaluati
 
 The [48 declared repair solutions](../evaluation/known-solution-check.json) were separately executed inside the supported grammar and compared with independently specified grouped and population expectations. They do not rely on the detector declaring its own repair successful. See [evaluation methodology](../evaluation/README.md), expected results and raw traces for the actual scope.
 
-The complete model comparison is recorded separately against the pinned source revision. It uses the same local Qwen model and task/settings, three trials for each of 24 repairable cases in each mode. Hidden grading examines complete groups and entity populations, and failures remain in the denominator. Final counts are recorded with its raw artifacts; the earlier exploratory result is not the final release comparison.
+The [completed model comparison](../evaluation/results/final-pinned/model-summary.json) uses the same local Qwen model and task/settings, three trials for each of 24 repairable cases in each mode. Hidden grading examines complete groups and entity populations, and failures remain in the denominator. Its [source check](../evaluation/results/final-pinned/completion.json) confirms the pinned runtime/evaluator files did not change. All **144 unique scheduled trials** are retained.
+
+| Mode | Successful executed repairs | Failed assistance | Aggregate assistance time | Input / output tokens |
+| --- | ---: | ---: | ---: | ---: |
+| Without diagnostic tools | 24 / 72 | 9 / 72 | 161.833 s | 55,101 / 8,442 |
+| With QueryProof tools | 43 / 72 | 16 / 72 | 425.420 s | 597,808 / 15,618 |
+
+The tools mode includes one 60-second timeout. More repairs succeeded overall in this fixed synthetic experiment, at greater time/token cost; population-filter repairs declined from 12/18 to 8/18. This is not a general model-accuracy claim. The [full results and failure analysis](../evaluation/RESULTS.md) retain family breakdowns. The earlier exploratory run and [interrupted 39-trial attempt](../evaluation/results/pinned-interrupted/interruption.json) are preserved and explicitly distinguished from this complete run. No paid inference was used. Human explanation-rubric review remains open.
+
+[Witness verification](../evaluation/witness-verification.json) independently re-executed **180/180 diagnostic queries**, matching every reported full count on its pinned snapshot.
 
 ## Performance
 

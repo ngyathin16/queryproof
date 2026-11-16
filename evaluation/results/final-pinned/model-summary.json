@@ -1,0 +1,26 @@
+{
+  "complete_acceptance_comparison": true,
+  "cases": 24,
+  "trials_per_case_per_mode": 3,
+  "modes": {
+    "baseline": {
+      "successful_repairs": 24,
+      "trials": 72,
+      "failed_assistance": 9,
+      "total_elapsed_ms": 161833,
+      "reported_input_tokens": 55101,
+      "reported_output_tokens": 8442,
+      "unreported_usage_trials": 0
+    },
+    "tools": {
+      "successful_repairs": 43,
+      "trials": 72,
+      "failed_assistance": 16,
+      "total_elapsed_ms": 425420,
+      "reported_input_tokens": 597808,
+      "reported_output_tokens": 15618,
+      "unreported_usage_trials": 0
+    }
+  },
+  "human_explanation_review": "not performed; automatic numeric/citation checks only"
+}
