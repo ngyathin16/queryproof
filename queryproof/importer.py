@@ -5,7 +5,7 @@ import io
 import json
 import re
 from datetime import datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, localcontext
 
 IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,62}$")
 TYPE = re.compile(r"^(VARCHAR|INTEGER|BIGINT|DOUBLE|BOOLEAN|DATE|TIMESTAMP|DECIMAL(?:\((\d+),(\d+)\))?)$")
@@ -39,7 +39,7 @@ def _value(raw, kind):
                 raise ValueError("invalid decimal precision/scale")
             if value != value.quantize(Decimal(1).scaleb(-scale)) or abs(value) >= Decimal(10) ** (precision - scale):
                 raise ValueError("value cannot be represented exactly in declared decimal type")
-            return str(value)
+            return format((abs(value) if value == 0 else value).quantize(Decimal(1).scaleb(-scale)), "f")
         return float(value)
     if kind in ("DATE", "TIMESTAMP"):
         parsed = datetime.fromisoformat(raw)
@@ -53,7 +53,7 @@ def _value(raw, kind):
     return raw
 
 
-def import_bundle(bundle):
+def _import_bundle(bundle):
     if not isinstance(bundle, dict) or not isinstance(bundle.get("manifest"), dict) or not isinstance(bundle.get("files"), dict):
         raise ValueError("A bundle needs a JSON manifest and a files map containing CSV text.")
     manifest, files = bundle["manifest"], bundle["files"]
@@ -108,3 +108,9 @@ def import_bundle(bundle):
         result[name] = {"columns": columns, "rows": rows, "row_count": len(rows)}
     canonical = json.dumps(result, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return {"id": hashlib.sha256(canonical.encode()).hexdigest(), "name": str(manifest.get("name", "Imported analysis"))[:200], "tables": result, "row_count": count, "input_bytes": input_bytes}
+
+
+def import_bundle(bundle):
+    with localcontext() as context:
+        context.prec = 60
+        return _import_bundle(bundle)

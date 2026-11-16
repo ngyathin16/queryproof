@@ -53,8 +53,20 @@ try {
   const provider = await (await context.request.get(`${base}/api/provider`)).json();
   assert((await page.locator('.provider-meta').innerText()).includes(`${provider.local ? 'Local' : 'Remote'} provider: ${provider.provider}`));
   await scan('assistance');
-  await page.locator('.assistant-panel > summary').click();
   check('Optional provider evidence disclosure and server-only key setup; no assistance without consent');
+  let staleConsentDispatches = 0;
+  await page.route('**/api/provider', route => route.fulfill({ json: { ...provider, provider: 'openai-compatible', endpoint: 'https://example.invalid/v1', model: 'changed-provider-test', local: false, configured: true } }));
+  await page.route('**/assist', route => { staleConsentDispatches += 1; return route.abort(); });
+  await page.getByLabel(/I choose to send this review/).check();
+  await page.getByRole('button', { name: 'Request live assistance' }).click();
+  await page.getByText('The configured provider changed. Review its destination and select the evidence-sharing checkbox again.').waitFor();
+  assert.equal(await page.getByLabel(/I choose to send this review/).isChecked(), false);
+  assert.equal(staleConsentDispatches, 0);
+  await page.unroute('**/api/provider');
+  await page.unroute('**/assist');
+  await page.reload();
+  await page.getByRole('heading', { name: 'This number needs a closer look.' }).waitFor();
+  check('Changed-provider consent guard: mocked config boundary clears consent and sends no assistance request');
 
   await page.getByRole('button', { name: 'Inspect suggested repair' }).click();
   assert.equal(await page.getByRole('button', { name: 'Accept checked revision' }).count(), 0);

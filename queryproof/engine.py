@@ -5,7 +5,7 @@ import json
 import time
 from collections import Counter, defaultdict
 from datetime import datetime
-from decimal import Decimal, ROUND_HALF_EVEN, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_EVEN, ROUND_HALF_UP, localcontext
 
 import duckdb
 import sqlglot
@@ -96,6 +96,8 @@ def _contract(snapshot, contract):
             raise ValueError("Only count may use '*' as its measure source.")
         if item["aggregation"] in ("sum", "avg") and not columns[col].startswith(("INTEGER", "BIGINT", "DOUBLE", "DECIMAL")):
             raise ValueError("SUM and AVG require a numeric measure-source column.")
+        if contract["null_policy"] == "zero" and col != "*" and not columns[col].startswith(("INTEGER", "BIGINT", "DOUBLE", "DECIMAL")):
+            raise Unsupported("The zero null policy currently supports numeric measure columns only; confirm preserve or exclude for text/date measures.")
     if not isinstance(contract["filters"], list):
         raise ValueError("Filters must be a list, including an empty list for all statuses/cohorts.")
     for clause in contract["filters"]:
@@ -190,12 +192,14 @@ def _population(row, contract, measures, column_types):
     return filters, temporal, nulls, known
 
 
-def _aggregate(rows, measure, null_policy):
+def _aggregate(rows, measure, null_policy, column_types):
     column, aggregation = measure["column"], measure["aggregation"]
     values = [1 if column == "*" else row[column] for row in rows]
     if null_policy == "zero":
         values = [0 if value is None else value for value in values]
     values = [value for value in values if value is not None]
+    if column != "*":
+        values = [_typed_literal(value, column_types[column]) for value in values]
     if aggregation == "count":
         return Decimal(len(values))
     if aggregation == "count_distinct":
@@ -206,7 +210,7 @@ def _aggregate(rows, measure, null_policy):
     return total / len(values) if aggregation == "avg" else total
 
 
-def reference(snapshot, contract):
+def _reference(snapshot, contract):
     measures = _contract(snapshot, contract)
     column_types = {c["name"]: c["type"] for c in snapshot["tables"][contract["base_table"]]["columns"]}
     rows = [row for row in snapshot["tables"][contract["base_table"]]["rows"] if all(_population(row, contract, measures, column_types)[:3])]
@@ -217,12 +221,18 @@ def reference(snapshot, contract):
         groups[tuple(row[column] for column in contract["groups"])].append(row)
     output = []
     for keys, members in groups.items():
-        value = _aggregate(members, measures[0], contract["null_policy"])
+        value = _aggregate(members, measures[0], contract["null_policy"], column_types)
         if contract["measure"]["aggregation"] == "ratio":
-            denominator = _aggregate(members, measures[1], contract["null_policy"])
+            denominator = _aggregate(members, measures[1], contract["null_policy"], column_types)
             value = None if denominator is None or denominator == 0 or value is None else value / denominator
         output.append({**dict(zip(contract["groups"], keys)), contract["measure"]["alias"]: None if value is None else str(value)})
     return {"columns": contract["groups"] + [contract["measure"]["alias"]], "rows": output, "row_count": len(output)}, rows
+
+
+def reference(snapshot, contract):
+    with localcontext() as context:
+        context.prec = 60
+        return _reference(snapshot, contract)
 
 
 def _filter_sql(contract, alias=""):
@@ -274,14 +284,18 @@ def _key_query(contract, keys):
     return f"SELECT * FROM {_quote(contract['base_table'])} WHERE " + (" OR ".join(terms) if terms else "FALSE")
 
 
-def _total(result, alias, aggregation):
+def _display_number(value, scale):
+    return str(value) if abs(value) > Decimal(2**53 - 1).scaleb(-scale) else float(value)
+
+
+def _total(result, alias, aggregation, scale):
     if aggregation in ("avg", "ratio", "count_distinct") and result["row_count"] > 1:
         return None
     values = [Decimal(str(row[alias])) for row in result["rows"] if row.get(alias) is not None]
-    return float(sum(values)) if values else None
+    return _display_number(sum(values), scale) if values else None
 
 
-def _result_witness(query, contract):
+def _result_witness(query, contract, differences):
     keys, metric = contract["groups"], _quote(contract["measure"]["alias"])
     group_columns = ", ".join(_quote(key) for key in keys)
     prefix = group_columns + ", " if keys else ""
@@ -292,12 +306,16 @@ def _result_witness(query, contract):
     columns = ", ".join(f"COALESCE(a.{_quote(key)}, e.{_quote(key)}) AS {_quote(key)}" for key in keys)
     if columns:
         columns += ", "
-    rounding = "round_even" if contract["rounding"] == "half_even" else "round"
-    left = f"{rounding}(a.__value, {contract['decimal_scale']})"
-    right = f"{rounding}(e.{metric}, {contract['decimal_scale']})"
-    tolerance = f"GREATEST({_literal(contract['absolute_tolerance'])}, ABS({right}) * {_literal(contract['relative_tolerance'])})"
+    predicates = []
+    for difference in differences:
+        terms = []
+        for key, value in difference["keys"].items():
+            column = f"COALESCE(a.{_quote(key)}, e.{_quote(key)})"
+            terms.append(column + (" IS NULL" if value is None else f" = {_literal(value)}"))
+        predicates.append("(" + (" AND ".join(terms) or "TRUE") + ")")
+    predicate = " OR ".join(predicates) or "FALSE"
     return (f"SELECT {columns}a.__value AS original, e.{metric} AS reference FROM ({actual}) AS a FULL OUTER JOIN ({expected}) AS e ON {join} "
-            f"WHERE a.__n IS NULL OR a.__n <> 1 OR e.__present IS NULL OR ((a.__value IS NULL) <> (e.{metric} IS NULL)) OR ABS({left} - {right}) > {tolerance}")
+            f"WHERE {predicate}")
 
 
 def _denominator_query(query, contract, alias):
@@ -307,26 +325,33 @@ def _denominator_query(query, contract, alias):
     projection = next((p for p in query.expressions if p.alias_or_name == measure["alias"]), None)
     if projection is None:
         return None
-    expression = projection.this if isinstance(projection, exp.Alias) else projection
-    while isinstance(expression, exp.Paren):
-        expression = expression.this
-    observed = None
-    if isinstance(expression, exp.Div):
-        numerator, denominator = expression.this, expression.expression
-        if isinstance(denominator, exp.Nullif):
-            denominator = denominator.this
-        if isinstance(numerator, exp.Sum) and isinstance(numerator.this, exp.Column) and numerator.this.name == measure["column"] and isinstance(denominator, exp.Count):
-            observed = denominator.copy()
-    elif isinstance(expression, exp.Avg) and isinstance(expression.this, exp.Coalesce):
-        if isinstance(expression.this.this, exp.Column) and expression.this.this.name == measure["column"]:
-            observed = exp.Count(this=expression.this.copy())
-    if observed is None:
+    denominators = {}
+    for expression in projection.walk():
+        observed = None
+        if isinstance(expression, exp.Div):
+            numerator, denominator = expression.this, expression.expression
+            while isinstance(numerator, (exp.Cast, exp.Paren)):
+                numerator = numerator.this
+            while isinstance(denominator, (exp.Cast, exp.Paren, exp.Nullif)):
+                denominator = denominator.this
+            if isinstance(numerator, exp.Sum) and isinstance(numerator.this, exp.Column) and numerator.this.name == measure["column"] and isinstance(denominator, exp.Count):
+                observed = denominator.copy()
+        elif isinstance(expression, exp.Avg) and isinstance(expression.this, exp.Coalesce):
+            if isinstance(expression.this.this, exp.Column) and expression.this.this.name == measure["column"]:
+                observed = exp.Count(this=expression.this.copy())
+        if observed is not None:
+            denominators[observed.sql()] = observed
+    if not denominators:
         return None
     expected = exp.Count(this=exp.column(measure["column"], table=alias))
     witness = query.copy()
     witness.set("expressions", [exp.column(c, table=alias) for c in contract["groups"]] + [
-        exp.alias_(observed.copy(), "observed_denominator"), exp.alias_(expected.copy(), "expected_denominator")])
-    witness.set("having", exp.Having(this=exp.NEQ(this=observed, expression=expected)))
+        exp.alias_(observed.copy(), "observed_denominator" + (f"_{index}" if index else "")) for index, observed in enumerate(denominators.values())] + [exp.alias_(expected.copy(), "expected_denominator")])
+    comparisons = [exp.NEQ(this=observed, expression=expected.copy()) for observed in denominators.values()]
+    predicate = comparisons[0]
+    for comparison in comparisons[1:]:
+        predicate = exp.Or(this=predicate, expression=comparison)
+    witness.set("having", exp.Having(this=predicate))
     witness.set("order", None)
     return witness.sql(dialect="duckdb")
 
@@ -365,7 +390,7 @@ def _compare(actual, expected, contract):
     return differences
 
 
-def review(snapshot, contract, sql, cancel_event=None):
+def _review(snapshot, contract, sql, cancel_event=None):
     started = time.monotonic()
     base_result = {"status": "failed", "checks": [], "original": None, "reference": None, "difference": None, "proposal": None,
                    "snapshot_id": snapshot["id"], "contract_hash": hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest(),
@@ -484,12 +509,15 @@ def review(snapshot, contract, sql, cancel_event=None):
                                  query.args["where"].sql() if query.args.get("where") else "No WHERE clause", clause, _key_query(contract, sorted(affected, key=repr)), examples))
         metric_alias = contract["measure"]["alias"]
         aggregation = contract["measure"]["aggregation"]
-        original["total"], expected["total"] = _total(original, metric_alias, aggregation), _total(expected, metric_alias, aggregation)
+        original["total"], expected["total"] = _total(original, metric_alias, aggregation, contract["decimal_scale"]), _total(expected, metric_alias, aggregation, contract["decimal_scale"])
         original["summary_kind"] = expected["summary_kind"] = "nonadditive groups" if aggregation in ("avg", "ratio", "count_distinct") and max(original["row_count"], expected["row_count"]) > 1 else "total"
-        absolute = None if original["total"] is None or expected["total"] is None else original["total"] - expected["total"]
+        original_total = sum((Decimal(str(row[metric_alias])) for row in original["rows"] if row[metric_alias] is not None), Decimal(0))
+        reference_total = sum((Decimal(str(row[metric_alias])) for row in expected["rows"] if row[metric_alias] is not None), Decimal(0))
+        exact_difference = original_total - reference_total
+        absolute = None if original["total"] is None or expected["total"] is None else _display_number(exact_difference, contract["decimal_scale"])
         checks.append(_check("results", "Independent grouped result", ISSUE if differences else PASSED,
                              f"{len(differences)} groups differ from the independent row calculation." if differences else "Every complete group matches the independent row calculation within the declared rounding and tolerances.",
-                             ", ".join(item.sql() for item in query.expressions), json.dumps(contract["measure"]), _result_witness(query, contract), differences))
+                             ", ".join(item.sql() for item in query.expressions), json.dumps(contract["measure"]), _result_witness(query, contract, differences), differences))
         # Unknown inputs can affect AVG/COUNT denominators without removing their entity from the FROM population.
         null_rows = [row for row in expected_rows if not _population(row, contract, measures, column_types)[3]]
         if differences and null_rows and not duplicate_keys and not missing and not unexpected:
@@ -502,7 +530,7 @@ def review(snapshot, contract, sql, cancel_event=None):
                                ", ".join(item.sql() for item in query.expressions), "preserve: AVG divides by the count of known measure values", denominator_query, executed[2]["rows"])
         status = ISSUE if any(check["status"] == ISSUE for check in checks) else PASSED
         base_result.update(status=status, checks=checks,
-                           difference={"absolute": absolute, "percent": None if not expected["total"] or absolute is None else absolute / abs(expected["total"]) * 100,
+                           difference={"absolute": absolute, "percent": None if not reference_total or absolute is None else float(exact_difference / abs(reference_total) * 100),
                                        "groups": differences[:20], "group_count": len(differences), "groups_truncated": len(differences) > 20,
                                        "population": {"expected": len(expected_keys), "observed": len(actual_keys), "missing": len(missing), "unexpected": len(unexpected)}},
                            proposal=_repair(contract, query) if status == ISSUE else None)
@@ -518,3 +546,9 @@ def review(snapshot, contract, sql, cancel_event=None):
         return base_result
     finally:
         base_result["elapsed_ms"] = round((time.monotonic() - started) * 1000, 2)
+
+
+def review(snapshot, contract, sql, cancel_event=None):
+    with localcontext() as context:
+        context.prec = 60
+        return _review(snapshot, contract, sql, cancel_event)

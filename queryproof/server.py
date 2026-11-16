@@ -161,6 +161,10 @@ class Handler(BaseHTTPRequestHandler):
                 body = self.body()
                 if body.get("consent") is not True:
                     raise ValueError("Explicitly consent to sharing this review's bounded evidence with the configured model.")
+                config = configuration()
+                expected = {key: config[key] for key in ("provider", "model", "endpoint")}
+                if body.get("expected_provider") != expected:
+                    raise ValueError("Provider settings changed or were not confirmed. Review the provider details and consent again.")
                 if run["status"] != "completed" or not run["result"]:
                     raise ValueError("Complete the deterministic review before requesting assistance.")
                 with app.lock:

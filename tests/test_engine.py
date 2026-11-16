@@ -135,6 +135,52 @@ class EngineTests(unittest.TestCase):
         sql = GOOD_SQL.replace("WHERE ", "WHERE o.ordered_at = '2026-10-02' AND ")
         self.assertEqual(review(self.snapshot, contract, sql)["status"], "passed on this snapshot")
 
+    def test_wrapped_denominators_cannot_hide_behind_zero_results(self):
+        bundle = commerce_bundle()
+        for value in ("120.00", "80.00", "150.00", "50.00", "95.00", "200.00", "60.00"):
+            bundle["files"]["orders.csv"] = bundle["files"]["orders.csv"].replace(value, "0.00")
+        snapshot = import_bundle(bundle)
+        contract = copy.deepcopy(CONTRACT)
+        contract["measure"]["aggregation"] = "avg"
+        for expression in ("(SUM(o.revenue) / COUNT(*)) + 0", "CAST(SUM(o.revenue) / COUNT(*) AS DOUBLE)"):
+            result = review(snapshot, contract, GOOD_SQL.replace("SUM(o.revenue)", expression))
+            self.assertEqual(result["status"], "issue found", result)
+            self.assertEqual(result["difference"]["groups"], [])
+            check = next(c for c in result["checks"] if c["id"] == "nulls")
+            self.assertEqual(execute(snapshot, [check["diagnostic_sql"]])[0]["row_count"], check["count"])
+
+    def test_large_decimals_keep_exact_cents_and_headline(self):
+        bundle = commerce_bundle()
+        bundle["manifest"]["tables"][0]["columns"][-1]["type"] = "DECIMAL(38,2)"
+        exact = "123456789012345678901234567890123456.78"
+        bundle["files"]["orders.csv"] = bundle["files"]["orders.csv"].replace("120.00", exact)
+        snapshot = import_bundle(bundle)
+        result = review(snapshot, CONTRACT, GOOD_SQL)
+        self.assertEqual(result["status"], "passed on this snapshot", result)
+        self.assertEqual(result["original"]["total"], "123456789012345678901234567890123736.78")
+        hong_kong = next(row for row in result["reference"]["rows"] if row["region"] == "Hong Kong")
+        self.assertEqual(hong_kong["revenue"], "123456789012345678901234567890123536.78")
+        wrong = review(snapshot, CONTRACT, GOOD_SQL.replace("SUM(o.revenue)", "SUM(o.revenue) + 0.01"))
+        self.assertEqual(wrong["status"], "issue found", wrong)
+        self.assertEqual(wrong["difference"]["group_count"], 2)
+        self.assertEqual(wrong["difference"]["absolute"], 0.02)
+        for check in wrong["checks"]:
+            self.assertEqual(execute(snapshot, [check["diagnostic_sql"]])[0]["row_count"], check["count"])
+
+    def test_decimal_distinct_and_null_zero_are_numeric(self):
+        bundle = commerce_bundle()
+        bundle["files"]["orders.csv"] = "order_id,region,status,ordered_at,revenue\n1,A,paid,2026-10-02,1.0\n2,A,paid,2026-10-02,1.00\n3,A,paid,2026-10-02,-0.00\n4,A,paid,2026-10-02,\n"
+        contract = copy.deepcopy(CONTRACT)
+        contract["measure"]["aggregation"] = "count_distinct"
+        contract["null_policy"] = "zero"
+        snapshot = import_bundle(bundle)
+        correct = "SELECT o.region,COUNT(DISTINCT COALESCE(o.revenue,0)) AS revenue FROM orders o GROUP BY o.region"
+        wrong = correct.replace("COUNT(DISTINCT COALESCE(o.revenue,0))", "COUNT(o.revenue)")
+        self.assertEqual(review(snapshot, contract, correct)["status"], "passed on this snapshot")
+        self.assertEqual(review(snapshot, contract, wrong)["status"], "issue found")
+        self.assertEqual(snapshot["tables"]["orders"]["rows"][0]["revenue"], snapshot["tables"]["orders"]["rows"][1]["revenue"])
+        self.assertEqual(snapshot["tables"]["orders"]["rows"][2]["revenue"], "0.00")
+
     def test_rounding_and_near_boundary(self):
         harmless = review(self.snapshot, CONTRACT, GOOD_SQL.replace("SUM(o.revenue)", "SUM(o.revenue) + 0.004"))
         wrong = review(self.snapshot, CONTRACT, GOOD_SQL.replace("SUM(o.revenue)", "SUM(o.revenue) + 0.006"))

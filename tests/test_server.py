@@ -62,6 +62,11 @@ class ApiTests(unittest.TestCase):
         run = self.wait_run(self.request("/api/runs", {"snapshot_id": snapshot["id"], "contract": example["contract"], "sql": example["sql"]}))
         self.assertEqual(run["status"], "completed", run)
         self.assertEqual(run["result"]["status"], "issue found")
+        with self.assertRaises(urllib.error.HTTPError) as denied:
+            self.request(f'/api/runs/{run["id"]}/assist', {"consent": True,
+                "expected_provider": {"provider": "openai-compatible", "model": "unconfirmed", "endpoint": "https://unconfirmed.example"}})
+        self.assertEqual(denied.exception.code, 400)
+        denied.exception.close()
         proposal = run["result"]["proposal"]
         self.assertTrue(proposal["sql"])
         repaired = self.wait_run(self.request("/api/runs", {"snapshot_id": snapshot["id"], "contract": example["contract"], "sql": proposal["sql"], "parent_id": run["id"]}))
