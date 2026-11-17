@@ -3,6 +3,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 import re
 from datetime import datetime
 from decimal import Decimal, InvalidOperation, localcontext
@@ -40,11 +41,16 @@ def _value(raw, kind):
             if value != value.quantize(Decimal(1).scaleb(-scale)) or abs(value) >= Decimal(10) ** (precision - scale):
                 raise ValueError("value cannot be represented exactly in declared decimal type")
             return format((abs(value) if value == 0 else value).quantize(Decimal(1).scaleb(-scale)), "f")
-        return float(value)
+        converted = float(value)
+        if not math.isfinite(converted):
+            raise ValueError("number is outside the finite DOUBLE range")
+        return converted
     if kind in ("DATE", "TIMESTAMP"):
         parsed = datetime.fromisoformat(raw)
         if parsed.tzinfo is not None:
             raise ValueError("use timezone-naive UTC timestamps")
+        if kind == "DATE" and len(raw) != 10:
+            raise ValueError("DATE requires YYYY-MM-DD without a time component")
         return parsed.date().isoformat() if kind == "DATE" else parsed.isoformat(sep=" ")
     if kind == "BOOLEAN":
         if raw.lower() not in ("true", "false"):
@@ -87,6 +93,9 @@ def _import_bundle(bundle):
             kind = column.get("type")
             if col.casefold() in {v.casefold() for v in names} or not isinstance(kind, str) or not TYPE.fullmatch(kind):
                 raise ValueError(f"{name}.{col}: duplicate column or unsupported type.")
+            match = TYPE.fullmatch(kind)
+            if match[2] and not 0 <= int(match[3]) <= int(match[2]) <= 38:
+                raise ValueError(f"{name}.{col}: invalid decimal precision/scale.")
             names.append(col)
         reader = csv.DictReader(io.StringIO(files[filename]), strict=True)
         if reader.fieldnames != names:

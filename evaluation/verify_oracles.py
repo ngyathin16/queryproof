@@ -1,5 +1,6 @@
 """Cross-check frozen known solutions directly, without invoking the detector."""
 import json
+import argparse
 import sys
 from pathlib import Path
 
@@ -12,7 +13,10 @@ from queryproof.worker import execute
 
 
 def main():
-    manifest, cases = load_cases()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--suite", choices=["v1", "v2"], default="v1")
+    args = parser.parse_args()
+    manifest, cases = load_cases(args.suite)
     records = []
     for split in ["development", "evaluation"]:
         for case in cases[split]:
@@ -31,7 +35,7 @@ def main():
                 record.update(passed=False, error=str(exc))
             records.append(record)
     output = {"manifest_sha256": manifest["sha256"], "method": "Execute each known solution in restricted DuckDB, compare independent row-oracle groups and selected base population. Does not invoke engine.review.", "passed": sum(r["passed"] for r in records), "total": len(records), "records": records}
-    destination = ROOT / "evaluation/known-solution-check.json"
+    destination = ROOT / ("evaluation/known-solution-check.json" if args.suite == "v1" else "evaluation/v2/known-solution-check.json")
     destination.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(output))
     if output["passed"] != output["total"]:

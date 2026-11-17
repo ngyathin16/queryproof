@@ -11,16 +11,17 @@ import time
 import urllib.request
 from collections import Counter
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_EVEN, ROUND_HALF_UP
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-def load_cases():
-    manifest = json.loads((ROOT / "evaluation/manifest.json").read_text(encoding="utf-8"))
-    raw = (ROOT / "evaluation/cases.json").read_bytes()
+def load_cases(suite="v1"):
+    folder = ROOT / "evaluation" if suite == "v1" else ROOT / "evaluation" / suite
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    raw = (folder / "cases.json").read_bytes()
     if hashlib.sha256(raw).hexdigest() != manifest["sha256"]:
         raise ValueError("Frozen case hash mismatch. Do not overwrite evaluation evidence.")
     return manifest, json.loads(raw)
@@ -52,7 +53,9 @@ def check_groups(case, result):
                 return False
         else:
             a, b = Decimal(str(wanted)), Decimal(str(found))
-            if abs(a - b.quantize(scale)) > max(tolerance, abs(a) * relative):
+            rounding = ROUND_HALF_EVEN if contract["rounding"] == "half_even" else ROUND_HALF_UP
+            a, b = a.quantize(scale, rounding=rounding), b.quantize(scale, rounding=rounding)
+            if abs(a - b) > max(tolerance, abs(a) * relative):
                 return False
     return True
 
@@ -90,6 +93,7 @@ def summarize(records):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--split", choices=["development", "evaluation"], default="evaluation")
+    parser.add_argument("--suite", choices=["v1", "v2"], default="v1")
     parser.add_argument("--models", action="store_true", help="Run all 144 real local-model trials (may take over an hour).")
     parser.add_argument("--smoke", action="store_true", help="Run one repair case once per model mode; not the acceptance comparison.")
     parser.add_argument("--output", default=None)
@@ -102,10 +106,10 @@ def main():
     if (args.models or args.smoke) and not configuration()["local"] and not args.allow_hosted:
         parser.error("Hosted inference can incur charges. Set account spending limits and explicitly add --allow-hosted to run it.")
 
-    manifest, dataset = load_cases()
+    manifest, dataset = load_cases(args.suite)
     output = Path(args.output) if args.output else ROOT / "evaluation/results" / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + args.split)
     output.mkdir(parents=True, exist_ok=False)
-    sources = [*sorted((ROOT / "queryproof").glob("*.py")), Path(__file__).resolve(), ROOT / "evaluation/generate_cases.py"]
+    sources = [*sorted((ROOT / "queryproof").glob("*.py")), Path(__file__).resolve(), ROOT / "evaluation/generate_cases.py", ROOT / "evaluation/generate_v2.py"]
     source_hashes = {str(path.relative_to(ROOT)).replace("\\", "/"): hashlib.sha256(path.read_bytes()).hexdigest() for path in sources}
     revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True)
     tracked = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, capture_output=True, text=True)
@@ -164,7 +168,8 @@ def main():
                             checked = proposal["review"]
                             grade["groups_match"] = check_groups(case, checked)
                             grade["population_matches"] = checked["status"] not in {"unsupported", "failed", "interrupted", "needs definition"} and check_population(case, snapshot, proposal["sql"])
-                            grade["success"] = grade["groups_match"] and grade["population_matches"]
+                            grade["semantic_checks_passed"] = checked["status"] == "passed on this snapshot"
+                            grade["success"] = grade["groups_match"] and grade["population_matches"] and grade["semantic_checks_passed"]
                         except Exception as exc:
                             grade["error"] = str(exc)
                     record = {"case_id": case["id"], "mode": mode, "trial": trial, "grade": grade, "assistance": result}

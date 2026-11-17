@@ -1,0 +1,52 @@
+{
+  "cases": 60,
+  "matched_status": 59,
+  "confusion": [
+    {
+      "expected": "issue found",
+      "actual": "issue found",
+      "count": 23
+    },
+    {
+      "expected": "issue found",
+      "actual": "passed on this snapshot",
+      "count": 1
+    },
+    {
+      "expected": "needs definition",
+      "actual": "needs definition",
+      "count": 12
+    },
+    {
+      "expected": "passed on this snapshot",
+      "actual": "passed on this snapshot",
+      "count": 12
+    },
+    {
+      "expected": "unsupported",
+      "actual": "unsupported",
+      "count": 12
+    }
+  ],
+  "missed": [
+    "v2-subscriptions-unknown-denominator"
+  ],
+  "incorrect_detection_by_family": {
+    "join": {
+      "detected": 6,
+      "total": 6
+    },
+    "population": {
+      "detected": 6,
+      "total": 6
+    },
+    "date": {
+      "detected": 6,
+      "total": 6
+    },
+    "null": {
+      "detected": 5,
+      "total": 6
+    }
+  }
+}

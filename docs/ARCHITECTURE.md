@@ -10,6 +10,8 @@ The SQL grammar is an explicit AST allowlist, backed by runtime restrictions. Su
 
 The reference evaluator uses Python rows and Decimal arithmetic from the declared metric contract. It does not derive expected values by rewriting the reviewed SQL. Join population, date, null and grouped-result checks are distinct. A result cannot pass with a missing required definition or an unsupported check. Complete group comparisons precede display truncation; NULL and absent groups remain distinct.
 
+Relationship declarations default to the metric base table; `source_table` explicitly names another imported table for a chained path. Every join matches a declared key pair and checks the actual source/target cardinality. Stable keys identify base entities, while relationship keys may legitimately repeat; preaggregating a many-to-many branch preserves the declared base grain. Measures and grouping still come from the base table. Ratio denominator witnesses catch wrong intermediate populations even when zero numerators hide the final-value discrepancy.
+
 ## Persistence and exports
 
 Snapshots, runs and model trials live in a local SQLite database. The UI marks changed SQL/contract/data as stale and keeps history available. Each run contains its original input even after a revision is reviewed. Reset restores a working draft; it does not destroy previous evidence.

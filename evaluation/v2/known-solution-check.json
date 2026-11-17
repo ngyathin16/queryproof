@@ -1,0 +1,296 @@
+{
+  "manifest_sha256": "fbc6372c46fc45844fec8a8e4d7ad48b7ba10e4d53a1e4c28cc4b7af4cafab27",
+  "method": "Execute each known solution in restricted DuckDB, compare independent row-oracle groups and selected base population. Does not invoke engine.review.",
+  "passed": 48,
+  "total": 48,
+  "records": [
+    {
+      "id": "development-join-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-join-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-population-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-date-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-01",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-02",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-03",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-04",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-05",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "development-null-06",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-ledger-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-ledger-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-ledger-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-ledger-unknown-row-loss",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-attributions-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-attributions-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-attributions-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-attributions-unknown-row-loss",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-subscriptions-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-subscriptions-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-subscriptions-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-subscriptions-unknown-denominator",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-readings-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-readings-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-readings-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-readings-unknown-row-loss",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-inventory-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-inventory-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-inventory-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-inventory-unknown-row-loss",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-sessions-repeated-branch",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-sessions-missing-zero-entity",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-sessions-inclusive-end",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    },
+    {
+      "id": "v2-sessions-unknown-denominator",
+      "groups_match": true,
+      "population_matches": true,
+      "passed": true
+    }
+  ]
+}

@@ -1,5 +1,14 @@
 # Change record
 
+## 17 November 2026 — structural evaluation and denominator correctness
+
+- Added a separately frozen evaluation version spanning signed ledgers, attribution bridges, ratios, device readings, distinct inventory labels and session averages. Its first execution exposed a zero-numerator ratio with a wrong denominator; that failure remains in the evidence.
+- Check ratio denominators independently of displayed totals and include executable denominator witnesses.
+- Support declared relationship paths through an earlier joined table with `source_table`, while retaining cardinality validation and the two-join limit.
+- Reject non-finite DOUBLE overflow, timestamp-bearing DATE inputs and invalid decimal declarations even in empty CSV files.
+- Match the evaluation grader to declared rounding and require semantic checks alongside independent result/population grading. Earlier model results remain pinned historical results.
+- Passed 45 Python tests and all 60 version-two deterministic statuses. Detailed acceptance and refreshed model evidence are tracked in the verification record.
+
 ## 16 November 2026 — distinct analytical interface
 
 - Compared graphite, cobalt, and ledger design studies, then replaced the cream/green interface with a graphite workbench, lime actions, cyan references, and amber findings.

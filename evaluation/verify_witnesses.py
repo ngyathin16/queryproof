@@ -12,12 +12,13 @@ def main():
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--suite", choices=["v1", "v2"], default="v1")
     args = parser.parse_args()
     sys.path.insert(0, str(args.source))
     from queryproof.importer import import_bundle
     from queryproof.worker import execute
 
-    frozen = (args.source / "evaluation/cases.json").read_bytes()
+    frozen = (args.source / ("evaluation/cases.json" if args.suite == "v1" else "evaluation/v2/cases.json")).read_bytes()
     cases = {case["id"]: case for case in json.loads(frozen)["evaluation"]}
     records = []
     for line in args.results.read_text(encoding="utf-8").splitlines():

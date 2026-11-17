@@ -132,8 +132,12 @@ def _contract(snapshot, contract):
         if not isinstance(relationship, dict) or relationship.get("table") not in snapshot["tables"] or relationship.get("cardinality") not in ("one-to-one", "one-to-many", "many-to-one", "many-to-many"):
             raise ValueError("Each relationship needs an imported table and declared cardinality.")
         remote = {c["name"] for c in snapshot["tables"][relationship["table"]]["columns"]}
+        source_table = relationship.get("source_table", base)
+        if source_table not in snapshot["tables"]:
+            raise ValueError("Each relationship source_table must name an imported table.")
+        local = {c["name"] for c in snapshot["tables"][source_table]["columns"]}
         local_keys, remote_keys = relationship.get("local_key"), relationship.get("remote_key")
-        if not isinstance(local_keys, list) or not isinstance(remote_keys, list) or not local_keys or len(local_keys) != len(remote_keys) or any(c not in columns for c in local_keys) or any(c not in remote for c in remote_keys):
+        if not isinstance(local_keys, list) or not isinstance(remote_keys, list) or not local_keys or len(local_keys) != len(remote_keys) or any(c not in local for c in local_keys) or any(c not in remote for c in remote_keys):
             raise ValueError("Relationship paths need equally sized lists of local and remote key columns.")
     return measures
 
@@ -320,6 +324,8 @@ def _result_witness(query, contract, differences):
 
 def _denominator_query(query, contract, alias):
     measure = contract["measure"]
+    if measure["aggregation"] == "ratio":
+        return _ratio_denominator_query(query, contract, alias)
     if measure["aggregation"] != "avg" or contract["null_policy"] != "preserve":
         return None
     projection = next((p for p in query.expressions if p.alias_or_name == measure["alias"]), None)
@@ -348,6 +354,47 @@ def _denominator_query(query, contract, alias):
     witness.set("expressions", [exp.column(c, table=alias) for c in contract["groups"]] + [
         exp.alias_(observed.copy(), "observed_denominator" + (f"_{index}" if index else "")) for index, observed in enumerate(denominators.values())] + [exp.alias_(expected.copy(), "expected_denominator")])
     comparisons = [exp.NEQ(this=observed, expression=expected.copy()) for observed in denominators.values()]
+    predicate = comparisons[0]
+    for comparison in comparisons[1:]:
+        predicate = exp.Or(this=predicate, expression=comparison)
+    witness.set("having", exp.Having(this=predicate))
+    witness.set("order", None)
+    return witness.sql(dialect="duckdb")
+
+
+def _ratio_denominator_query(query, contract, alias):
+    measure = contract["measure"]
+    projection = next((p for p in query.expressions if p.alias_or_name == measure["alias"]), None)
+    if projection is None:
+        return None
+
+    def aggregation(part):
+        column = "*" if part["column"] == "*" else f"{_quote(alias)}.{_quote(part['column'])}"
+        if column != "*" and contract["null_policy"] == "zero":
+            column = f"COALESCE({column}, 0)"
+        sql = f"COUNT(DISTINCT {column})" if part["aggregation"] == "count_distinct" else f"{part['aggregation'].upper()}({column})"
+        return sqlglot.parse_one(sql, read="duckdb")
+
+    def normalized(node):
+        while isinstance(node, (exp.Cast, exp.Paren)):
+            node = node.this
+        node = node.copy()
+        for identifier_node in node.find_all(exp.Identifier):
+            identifier_node.set("quoted", False)
+        return node
+
+    numerator = normalized(aggregation(measure["numerator"]))
+    expected = exp.Nullif(this=aggregation(measure["denominator"]), expression=exp.Literal.number(0))
+    observed = [division.expression.copy() for division in projection.find_all(exp.Div)
+                if normalized(division.this) == numerator]
+    if not observed:
+        return None
+    # Zero numerators can conceal a changed denominator in every displayed group.
+    witness = query.copy()
+    witness.set("expressions", [exp.column(c, table=alias) for c in contract["groups"]] + [
+        exp.alias_(node.copy(), f"observed_denominator_{index}") for index, node in enumerate(observed)
+    ] + [exp.alias_(expected.copy(), "expected_denominator")])
+    comparisons = [exp.NullSafeNEQ(this=exp.Nullif(this=node, expression=exp.Literal.number(0)), expression=expected.copy()) for node in observed]
     predicate = comparisons[0]
     for comparison in comparisons[1:]:
         predicate = exp.Or(this=predicate, expression=comparison)
@@ -410,21 +457,29 @@ def _review(snapshot, contract, sql, cancel_event=None):
             raise Unsupported("The outer query must start from the contract's base table; use aggregate CTEs for relationship branches.", source.sql())
         alias = source.alias_or_name
         ctes = {cte.alias: cte.this for cte in (query.args.get("with_").expressions if query.args.get("with_") else [])}
+        joined_sources = {alias: (source.name, None)}
         for join in query.args.get("joins", []):
             table = join.this.name
             branch = ctes.get(table)
             underlying = branch.args["from_"].this.name if branch is not None else table
-            relationships = [relation for relation in contract["relationships"] if relation["table"] == underlying]
-            if not relationships:
-                base_result.update(status="needs definition", checks=[_check("relationships", "Declared relationship paths", "needs definition", f"Declare the relationship from {source.name} to {underlying} before reviewing this join.", join.sql(), "relationships")])
-                return base_result
             pairs = []
+            local_alias = None
             for equality in join.args["on"].find_all(exp.EQ):
                 left, right = equality.this, equality.expression
-                if left.table != alias:
+                if left.table == join.this.alias_or_name:
                     left, right = right, left
-                if left.table != alias or right.table != join.this.alias_or_name:
-                    raise Unsupported("Relationship joins must connect each branch directly to the declared base table.", equality.sql())
+                if left.table not in joined_sources or right.table != join.this.alias_or_name or (local_alias is not None and local_alias != left.table):
+                    raise Unsupported("Each relationship join must connect one earlier table to the new branch through a declared path.", equality.sql())
+                local_alias = left.table
+                local_column = left.name
+                local_table, local_branch = joined_sources[local_alias]
+                if local_branch is not None:
+                    projected = next((p for p in local_branch.expressions if p.alias_or_name == local_column), None)
+                    if isinstance(projected, exp.Alias):
+                        projected = projected.this
+                    if not isinstance(projected, exp.Column):
+                        raise Unsupported("A relationship CTE must project its local key columns without transforming them.", left.sql())
+                    local_column = projected.name
                 remote_column = right.name
                 if branch is not None:
                     projected = next((p for p in branch.expressions if p.alias_or_name == remote_column), None)
@@ -433,12 +488,17 @@ def _review(snapshot, contract, sql, cancel_event=None):
                     if not isinstance(projected, exp.Column):
                         raise Unsupported("A relationship CTE must project its remote key columns without transforming them.", right.sql())
                     remote_column = projected.name
-                pairs.append((left.name, remote_column))
-            if not any(set(pairs) == set(zip(r["local_key"], r["remote_key"])) for r in relationships):
+                pairs.append((local_column, remote_column))
+            relationships = [relation for relation in contract["relationships"] if relation["table"] == underlying and relation.get("source_table", source.name) == local_table]
+            if not relationships:
+                base_result.update(status="needs definition", checks=[_check("relationships", "Declared relationship paths", "needs definition", f"Declare the relationship from {local_table} to {underlying} before reviewing this join.", join.sql(), "relationships")])
+                return base_result
+            relationships = [r for r in relationships if set(pairs) == set(zip(r["local_key"], r["remote_key"]))]
+            if not relationships:
                 raise Unsupported("These join keys do not match a declared relationship path. Review the contract or use its declared equijoin keys.", join.sql())
             for relationship in relationships:
                 for table_name, columns, should_be_unique in (
-                    (source.name, relationship["local_key"], relationship["cardinality"] in ("one-to-one", "one-to-many")),
+                    (local_table, relationship["local_key"], relationship["cardinality"] in ("one-to-one", "one-to-many")),
                     (underlying, relationship["remote_key"], relationship["cardinality"] in ("one-to-one", "many-to-one")),
                 ):
                     keys = [tuple(row[c] for c in columns) for row in snapshot["tables"][table_name]["rows"]]
@@ -446,6 +506,7 @@ def _review(snapshot, contract, sql, cancel_event=None):
                     if should_be_unique and len(nonnull) != len(set(nonnull)):
                         base_result.update(status="needs definition", checks=[_check("relationships", "Relationship cardinality", "needs definition", f"{table_name} repeats a relationship key declared unique by {relationship['cardinality']}. Confirm the actual cardinality.", join.sql(), json.dumps(relationship))])
                         return base_result
+            joined_sources[join.this.alias_or_name] = (underlying, branch)
         lineage = query.copy()
         lineage.set("expressions", [exp.column(column, table=alias) for column in contract["stable_key"]] + [exp.alias_(exp.Count(this=exp.Star()), "__multiplicity")])
         lineage.set("group", exp.Group(expressions=[exp.column(column, table=alias) for column in contract["stable_key"]]))
@@ -526,8 +587,8 @@ def _review(snapshot, contract, sql, cancel_event=None):
                                ", ".join(item.sql() for item in query.expressions), contract["null_policy"], _key_query(contract, [key_of(row) for row in null_rows]), null_rows)
         if denominator_query and executed[2]["rows"]:
             checks[3] = _check("nulls", "Unknown values and denominators", ISSUE,
-                               "The query's AVG denominator counts a different population than the non-null measure population. This remains an issue when final values coincide, including all-NULL groups.",
-                               ", ".join(item.sql() for item in query.expressions), "preserve: AVG divides by the count of known measure values", denominator_query, executed[2]["rows"])
+                               "The query's denominator differs from the declared measure denominator. This remains an issue when final values coincide, including zero numerators and all-NULL groups.",
+                               ", ".join(item.sql() for item in query.expressions), json.dumps(contract["measure"]), denominator_query, executed[2]["rows"])
         status = ISSUE if any(check["status"] == ISSUE for check in checks) else PASSED
         base_result.update(status=status, checks=checks,
                            difference={"absolute": absolute, "percent": None if not reference_total or absolute is None else float(exact_difference / abs(reference_total) * 100),

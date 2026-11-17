@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "sha256": "fbc6372c46fc45844fec8a8e4d7ad48b7ba10e4d53a1e4c28cc4b7af4cafab27",
+  "frozen_before_execution": true,
+  "counts": {
+    "development": 60,
+    "evaluation": 60
+  },
+  "per_split": {
+    "join": 6,
+    "population": 6,
+    "date": 6,
+    "null": 6,
+    "valid": 12,
+    "definition": 12,
+    "unsupported": 12
+  },
+  "development": "Previously frozen v1 development, unchanged; already inspected regression cases.",
+  "evaluation": "Six schemas: signed ledger, compound attribution bridge, nonadditive ratio, compound device readings, distinct inventory labels, zero-valued session averages. Compound many-to-many relationship keys, separate dimension joins, preaggregated branches and distinct projection/filter shapes differ from development.",
+  "oracle": "Standalone Python row calculation in generate_v2.py, no queryproof/DuckDB/SQLGlot import.",
+  "provenance": "Agent-authored fictional records. No customer data or human review.",
+  "claims": "First execution retained. After inspection this is regression evidence, not continuing unseen accuracy."
+}

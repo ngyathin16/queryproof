@@ -44,11 +44,14 @@ People who prefer a hosted provider can configure an OpenAI-compatible API and t
 ```sh
 uv run python -m unittest discover -s tests -v
 uv run python scripts/evaluate.py --help
+uv run python scripts/evaluate.py --suite v2
 ```
 
 With the application running, `cd ui` and run `npm run verify` for the actual browser workflow and automated accessibility checks. It uses Edge on Windows; elsewhere install Playwright Chromium with `npx playwright install chromium`. `npm run walkthrough` captures the captioned walkthrough from the real application. These commands create test reviews in the chosen server's local history; use a separate `--data-dir` if you want to keep them apart from your own reviews.
 
 The evaluation folder contains versioned cases, independent expected results, a frozen hash and [recorded outcomes](evaluation/RESULTS.md). Read its manifest before using the numbers; development/regression results are not proof of unseen-case accuracy. Browser checks, screenshots and remaining release gates are recorded in [verification](docs/VERIFICATION.md).
+
+The [second frozen suite](evaluation/v2/manifest.json) adds six different schema and relationship patterns, including legitimate repeated relationship keys, nonadditive ratios, signed compensation and floating-point rounding. Its first-run miss and subsequent fix are retained separately. Relationships may specify `source_table` to connect an earlier joined table to the next branch; omitted `source_table` means the metric's base table.
 
 ## Architecture and limits
 
