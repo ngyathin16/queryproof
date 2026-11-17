@@ -1,0 +1,291 @@
+{
+  "measured_at_utc": "2026-11-17T06:12:26.122999+00:00",
+  "claim_under_test": "Completed deterministic review p95 <= 3000ms over 30 warm runs on this explicit 100,000-row synthetic fixture.",
+  "environment": {
+    "os": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.13",
+    "processor": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "logical_cpus": 24,
+    "load_average": null
+  },
+  "conditions": "Shared development machine; other application/model/browser processes may be active. No exclusive CPU reservation. Each review starts a fresh isolated worker; warm refers to OS/import cache. Cold is first review in this process, not a reboot or flushed OS cache.",
+  "timed_region": "engine.review including grammar, contract validation, worker startup, full snapshot IPC/loading, both SQL queries, independent row oracle, full grouped comparison and witnesses. CSV import measured separately. Browser/HTTP/export not timed.",
+  "fixture": {
+    "seed": "formula-v1",
+    "snapshot_id": "11787588b1533a416a4facad3c704cf5e3e921593e3c068ddf09dad858ca91eb",
+    "rows": 100000,
+    "base_rows": 20000,
+    "branch_rows": [
+      40000,
+      40000
+    ],
+    "groups": 10,
+    "join_output_rows": 80000,
+    "input_bytes": 1642343,
+    "expected_original_total": 8000000,
+    "expected_reference_total": 2000000,
+    "expected_duplicated_entities": 20000
+  },
+  "import_ms": 233.41139999683946,
+  "cold_ms": 738.6754999752156,
+  "warm_count": 30,
+  "warm_p95_ms": 774.302700010594,
+  "warm_median_ms": 729.1953999956604,
+  "warm_range_ms": [
+    696.8434000154957,
+    776.6930999932811
+  ],
+  "failed_runs": 0,
+  "samples": [
+    {
+      "kind": "cold",
+      "index": 0,
+      "ms": 738.6754999752156,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103673856
+    },
+    {
+      "kind": "warm",
+      "index": 1,
+      "ms": 701.4715000404976,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103317504
+    },
+    {
+      "kind": "warm",
+      "index": 2,
+      "ms": 701.7420000047423,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103030784
+    },
+    {
+      "kind": "warm",
+      "index": 3,
+      "ms": 703.5480000195093,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103452672
+    },
+    {
+      "kind": "warm",
+      "index": 4,
+      "ms": 697.3732999758795,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 102838272
+    },
+    {
+      "kind": "warm",
+      "index": 5,
+      "ms": 709.1879999497905,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103337984
+    },
+    {
+      "kind": "warm",
+      "index": 6,
+      "ms": 713.16070004832,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103043072
+    },
+    {
+      "kind": "warm",
+      "index": 7,
+      "ms": 720.3447000356391,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103202816
+    },
+    {
+      "kind": "warm",
+      "index": 8,
+      "ms": 725.1415000064299,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103215104
+    },
+    {
+      "kind": "warm",
+      "index": 9,
+      "ms": 705.2816999494098,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103137280
+    },
+    {
+      "kind": "warm",
+      "index": 10,
+      "ms": 696.8434000154957,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103202816
+    },
+    {
+      "kind": "warm",
+      "index": 11,
+      "ms": 703.2434999709949,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 102903808
+    },
+    {
+      "kind": "warm",
+      "index": 12,
+      "ms": 720.37499997532,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103878656
+    },
+    {
+      "kind": "warm",
+      "index": 13,
+      "ms": 708.32060003886,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103317504
+    },
+    {
+      "kind": "warm",
+      "index": 14,
+      "ms": 711.4569999976084,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 102957056
+    },
+    {
+      "kind": "warm",
+      "index": 15,
+      "ms": 737.2510000132024,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103399424
+    },
+    {
+      "kind": "warm",
+      "index": 16,
+      "ms": 761.1104000243358,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103620608
+    },
+    {
+      "kind": "warm",
+      "index": 17,
+      "ms": 749.3322000373155,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103260160
+    },
+    {
+      "kind": "warm",
+      "index": 18,
+      "ms": 733.249299984891,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103456768
+    },
+    {
+      "kind": "warm",
+      "index": 19,
+      "ms": 742.3081999877468,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 102858752
+    },
+    {
+      "kind": "warm",
+      "index": 20,
+      "ms": 740.7306000241078,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103268352
+    },
+    {
+      "kind": "warm",
+      "index": 21,
+      "ms": 733.5048000095412,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103686144
+    },
+    {
+      "kind": "warm",
+      "index": 22,
+      "ms": 721.3206000160426,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103198720
+    },
+    {
+      "kind": "warm",
+      "index": 23,
+      "ms": 750.5537999677472,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103038976
+    },
+    {
+      "kind": "warm",
+      "index": 24,
+      "ms": 750.9203000226989,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103608320
+    },
+    {
+      "kind": "warm",
+      "index": 25,
+      "ms": 747.9038999881595,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103260160
+    },
+    {
+      "kind": "warm",
+      "index": 26,
+      "ms": 776.6930999932811,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103120896
+    },
+    {
+      "kind": "warm",
+      "index": 27,
+      "ms": 767.666100000497,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103194624
+    },
+    {
+      "kind": "warm",
+      "index": 28,
+      "ms": 774.302700010594,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103559168
+    },
+    {
+      "kind": "warm",
+      "index": 29,
+      "ms": 745.0995999970473,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103018496
+    },
+    {
+      "kind": "warm",
+      "index": 30,
+      "ms": 744.6220999700017,
+      "correct": true,
+      "status": "issue found",
+      "worker_peak_rss_bytes": 103227392
+    }
+  ],
+  "limiter_evidence": "Separate untimed cProfile in adjacent .profile.txt; subprocess communicate includes worker import/loading/execution. No before/after speedup claim.",
+  "target_met": true
+}

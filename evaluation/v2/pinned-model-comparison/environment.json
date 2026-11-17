@@ -1,0 +1,66 @@
+{
+  "started_at": "2026-11-17T06:05:21.726216+00:00",
+  "manifest_sha256": "fbc6372c46fc45844fec8a8e4d7ad48b7ba10e4d53a1e4c28cc4b7af4cafab27",
+  "source_sha256": {
+    "queryproof/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "queryproof/engine.py": "3d9cce51a6fec98ae78df48037ec36371634966198acbe1a517966c7058b4d00",
+    "queryproof/fixtures.py": "255b8aba60777ee202d9fb3283df50e646edbdc5242f4751f70f5f5a41980b20",
+    "queryproof/importer.py": "6ba19e19d135f7503ed9f78694009ff18bdd2cc55afc209f201b5d8971cf2d23",
+    "queryproof/provider.py": "209facd1dd1ed6129c4816ea2cbb12a335c80c5f7d01b18805f1628afc72f824",
+    "queryproof/report.py": "e283836821c83df90755587b2bd3b7ef44a8c1153b371466a5d63c1b9cf64207",
+    "queryproof/server.py": "5b3001dd39c29cc40106d5b54756c6aaa8c740da2609543048c678468745a809",
+    "queryproof/sql.py": "2db3cb31dc31207b6676df241e777ae8866b4ba5791bca5d5424929a015361ff",
+    "queryproof/store.py": "d091b4c8076f182117933504f0180fbe824217645d5ef0618158b85546816f2a",
+    "queryproof/worker.py": "2aaabda9aaf73bbb47d932cb501d56420345496c951a909e0cf91de4806f448b",
+    "scripts/evaluate.py": "654146ab64aff060ec552d155c57b9798c2805eea18217592db3a940d45e635d",
+    "evaluation/generate_cases.py": "3a9cce1cc3b0ddfb4ae56d9c3dac514f16035b43861830848762ef691ab31cab",
+    "evaluation/generate_v2.py": "550475b6ed83d8c1a30fe229c6bad148bc29d7859334598cd0378cac0cedb944"
+  },
+  "git_revision": "5e7e97b122aa0b3adff4762254ed094496597dd6",
+  "tracked_changes": [],
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "split": "evaluation",
+  "case_count": 60,
+  "provider": {
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "endpoint": "http://127.0.0.1:11434",
+    "local": true,
+    "configured": true,
+    "max_tool_calls": 8,
+    "timeout_seconds": 60,
+    "max_output_tokens": 2048,
+    "disclosure": "Only the contract, SQL, schema and requested bounded findings are sent to your local Ollama service.",
+    "installed_model": {
+      "name": "qwen3.5:9b",
+      "model": "qwen3.5:9b",
+      "modified_at": "2026-11-02T12:13:30.7546065+08:00",
+      "size": 6550825550,
+      "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+      "details": {
+        "parent_model": "model.gguf",
+        "format": "gguf",
+        "family": "qwen35",
+        "families": [
+          "qwen35"
+        ],
+        "parameter_size": "9.0B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 262144,
+        "embedding_length": 4096,
+        "runner": "llamacpp"
+      },
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools",
+        "thinking"
+      ]
+    },
+    "server_version": {
+      "version": "0.40.16"
+    }
+  },
+  "evaluation_status": "development regression evidence after first inspection; no unseen claim"
+}

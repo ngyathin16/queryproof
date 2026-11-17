@@ -1,0 +1,38 @@
+         1731152 function calls (1688413 primitive calls) in 1.023 seconds
+
+   Ordered by: cumulative time
+   List reduced from 469 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        6    0.000    0.000    1.070    0.178 subprocess.py:1165(communicate)
+        6    0.000    0.000    1.070    0.178 subprocess.py:1603(_communicate)
+        1    0.007    0.007    1.023    1.023 engine.py:612(review)
+        1    0.084    0.084    1.017    1.017 engine.py:440(_review)
+        8    0.000    0.000    0.898    0.112 threading.py:1117(join)
+       12    0.000    0.000    0.898    0.075 threading.py:1155(_wait_for_tstate_lock)
+    22/18    0.325    0.015    0.898    0.050 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000    0.608    0.608 worker.py:71(execute)
+      2/1    0.000    0.000    0.572    0.572 threading.py:1018(_bootstrap)
+      2/1    0.000    0.000    0.572    0.572 threading.py:1058(_bootstrap_inner)
+      2/1    0.000    0.000    0.572    0.572 threading.py:1001(run)
+      2/1    0.000    0.000    0.572    0.572 subprocess.py:1598(_readerthread)
+      6/5    0.000    0.000    0.572    0.114 {method 'close' of '_io.BufferedReader' objects}
+    40000    0.033    0.000    0.195    0.000 engine.py:187(_population)
+        6    0.000    0.000    0.172    0.029 subprocess.py:1140(_stdin_write)
+        1    0.172    0.172    0.172    0.172 {method 'write' of '_io.BufferedWriter' objects}
+        1    0.000    0.000    0.158    0.158 engine.py:236(reference)
+        1    0.015    0.015    0.158    0.158 engine.py:217(_reference)
+   100002    0.021    0.000    0.152    0.000 {built-in method builtins.all}
+    80000    0.017    0.000    0.125    0.000 engine.py:188(<genexpr>)
+80000/40000    0.048    0.000    0.104    0.000 engine.py:172(_comparison)
+    40010    0.006    0.000    0.081    0.000 {built-in method builtins.any}
+    80000    0.012    0.000    0.079    0.000 engine.py:180(<genexpr>)
+   100002    0.033    0.000    0.051    0.000 engine.py:145(_typed_literal)
+        2    0.018    0.009    0.028    0.014 engine.py:48(_contract)
+       10    0.005    0.001    0.027    0.003 engine.py:199(_aggregate)
+    60000    0.018    0.000    0.025    0.000 engine.py:523(<lambda>)
+        5    0.000    0.000    0.024    0.005 __init__.py:183(dumps)
+        5    0.000    0.000    0.024    0.005 encoder.py:183(encode)
+        5    0.024    0.005    0.024    0.005 encoder.py:205(iterencode)
+
+

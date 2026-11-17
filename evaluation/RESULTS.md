@@ -1,5 +1,7 @@
 # Recorded evaluation results
 
+**17 November update:** The [new structural suite](v2/manifest.json) first detected 23/24 incorrect analyses with no false issues on 12 valid cases and no verification of 24 underspecified/unsupported cases. Its denominator miss is preserved in [first execution](v2/first-execution/summary.json); the fix yields [60/60 regression statuses](v2/pinned-model-comparison/summary.json). The complete fresh Qwen comparison records **12/72 successful repairs without tools and 57/72 with tools**, with all failures retained. [Raw trials](v2/pinned-model-comparison/model-trials.jsonl), [summary](v2/pinned-model-comparison/model-summary.json), [agent explanation review](v2/pinned-model-comparison/explanation-review.json). Nine snapshot-correct tool repairs still had misleading explanations. Do not combine these trials with the older experiment below. See [current verification](../docs/VERIFICATION.md) for scope and source pinning.
+
 Recorded on 16 November 2026. The final run used implementation commit `7fd67e20442c7c4febdd80a0a44c6f8162c2b6c8`. Its [environment record](results/final-pinned/environment.json) includes source hashes, the model digest, platform and versions; its [completion record](results/final-pinned/completion.json) confirms those implementation sources stayed unchanged throughout the run. A tests-only environment-isolation improvement was present as a tracked change; it did not alter the runtime or grader.
 
 ## Deterministic checks and independent evidence

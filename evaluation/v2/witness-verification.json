@@ -1,0 +1,1449 @@
+{
+  "revision": "5e7e97b122aa0b3adff4762254ed094496597dd6",
+  "manifest_sha256": "fbc6372c46fc45844fec8a8e4d7ad48b7ba10e4d53a1e4c28cc4b7af4cafab27",
+  "method": "Each emitted diagnostic query is independently re-executed in the restricted worker; returned full row count is compared with the finding count. No detector is called.",
+  "passed": 180,
+  "total": 180,
+  "records": [
+    {
+      "case_id": "v2-ledger-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b LEFT JOIN tags AS t ON b.entry = t.entry WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-repeated-branch",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.account, SUM(b.value) AS metric FROM ledger AS b LEFT JOIN tags AS t ON b.entry = t.entry WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE (COALESCE(a.\"account\", e.\"account\") = 'A')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.entry <> 5 GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE (\"entry\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE (\"entry\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.account, SUM(b.value) AS metric FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.entry <> 5 GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE (\"entry\" = 7)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.account, SUM(b.value) AS metric FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE (COALESCE(a.\"account\", e.\"account\") = 'A')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-unknown-row-loss",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-unknown-row-loss",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-unknown-row-loss",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-unknown-row-loss",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE (\"entry\" = 4)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-unknown-row-loss",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.account, SUM(b.value) AS metric FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE (COALESCE(a.\"account\", e.\"account\") IS NULL)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT entry, COUNT(*) AS n FROM tags GROUP BY entry) SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b LEFT JOIN tag_groups AS t ON b.entry = t.entry LEFT JOIN dimensions AS d ON b.entry = d.entry WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT entry, COUNT(*) AS n FROM tags GROUP BY entry) SELECT b.account, SUM(b.value) AS metric FROM ledger AS b LEFT JOIN tag_groups AS t ON b.entry = t.entry LEFT JOIN dimensions AS d ON b.entry = d.entry WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.entry, COUNT(*) AS __multiplicity FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.entry HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"ledger\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-ledger-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"account\", e.\"account\") AS \"account\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"account\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.account, SUM(CAST(b.value AS DECIMAL(18, 2))) + 0.00004 AS metric FROM ledger AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.account) AS result GROUP BY \"account\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"account\", SUM(b.\"value\") AS \"metric\"\nFROM \"ledger\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"account\"\nORDER BY b.\"account\") AS expected_result) AS e ON a.\"account\" IS NOT DISTINCT FROM e.\"account\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b LEFT JOIN tags AS t ON b.campaign = t.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-repeated-branch",
+      "check_id": "results",
+      "expected_count": 2,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b LEFT JOIN tags AS t ON b.campaign = t.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE (COALESCE(a.\"campaign\", e.\"campaign\") = 1) OR (COALESCE(a.\"campaign\", e.\"campaign\") = 2)",
+      "observed_count": 2,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE (\"campaign\" = 3 AND \"person\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE (COALESCE(a.\"campaign\", e.\"campaign\") = 3)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE (\"campaign\" = 4 AND \"person\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE (COALESCE(a.\"campaign\", e.\"campaign\") = 4)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-unknown-row-loss",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-unknown-row-loss",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-unknown-row-loss",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-unknown-row-loss",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE (\"campaign\" = 2 AND \"person\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-unknown-row-loss",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT campaign, COUNT(*) AS n FROM tags GROUP BY campaign) SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b LEFT JOIN tag_groups AS t ON b.campaign = t.campaign LEFT JOIN dimensions AS d ON b.campaign = d.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT campaign, COUNT(*) AS n FROM tags GROUP BY campaign) SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b LEFT JOIN tag_groups AS t ON b.campaign = t.campaign LEFT JOIN dimensions AS d ON b.campaign = d.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.campaign, b.person, COUNT(*) AS __multiplicity FROM attributions AS b INNER JOIN dimensions AS d ON b.campaign = d.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign, b.person HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"attributions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-attributions-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"campaign\", e.\"campaign\") AS \"campaign\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"campaign\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.campaign, SUM(b.value) AS metric FROM attributions AS b INNER JOIN dimensions AS d ON b.campaign = d.campaign WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.campaign) AS result GROUP BY \"campaign\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"campaign\", SUM(b.\"value\") AS \"metric\"\nFROM \"attributions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"campaign\"\nORDER BY b.\"campaign\") AS expected_result) AS e ON a.\"campaign\" IS NOT DISTINCT FROM e.\"campaign\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b LEFT JOIN tags AS t ON b.subscription = t.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-repeated-branch",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT SUM(b.value) / NULLIF(COUNT(b.exposure), 0) AS metric FROM subscriptions AS b LEFT JOIN tags AS t ON b.subscription = t.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.subscription <> 5 GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE (\"subscription\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE (\"subscription\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT SUM(b.value) / NULLIF(COUNT(b.exposure), 0) AS metric FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.subscription <> 5) AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE (\"subscription\" = 7)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT SUM(b.value) / NULLIF(COUNT(b.exposure), 0) AS metric FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE (TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-unknown-denominator",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-unknown-denominator",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-unknown-denominator",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-unknown-denominator",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COUNT(*) AS observed_denominator_0, NULLIF(COUNT(\"b\".\"exposure\"), 0) AS expected_denominator FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' HAVING NULLIF(COUNT(*), 0) IS DISTINCT FROM NULLIF(COUNT(\"b\".\"exposure\"), 0)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-unknown-denominator",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT SUM(b.value) / COUNT(*) AS metric FROM subscriptions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT subscription, COUNT(*) AS n FROM tags GROUP BY subscription) SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b LEFT JOIN tag_groups AS t ON b.subscription = t.subscription LEFT JOIN dimensions AS d ON b.subscription = d.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT subscription, COUNT(*) AS n FROM tags GROUP BY subscription) SELECT SUM(b.value) / NULLIF(COUNT(b.exposure), 0) AS metric FROM subscriptions AS b LEFT JOIN tag_groups AS t ON b.subscription = t.subscription LEFT JOIN dimensions AS d ON b.subscription = d.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.subscription, COUNT(*) AS __multiplicity FROM subscriptions AS b INNER JOIN dimensions AS d ON b.subscription = d.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.subscription HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"subscriptions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-subscriptions-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT a.__value AS original, e.\"metric\" AS reference FROM (SELECT COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT SUM(b.value) / NULLIF(COUNT(b.exposure), 0) AS metric FROM subscriptions AS b INNER JOIN dimensions AS d ON b.subscription = d.subscription WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01') AS result) AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT SUM(b.\"value\") / NULLIF(COUNT(b.\"exposure\"), 0) AS \"metric\"\nFROM \"subscriptions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01') AS expected_result) AS e ON TRUE WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b LEFT JOIN tags AS t ON b.device = t.device WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-repeated-branch",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) AS metric FROM readings AS b LEFT JOIN tags AS t ON b.device = t.device WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE (\"device\" = 3 AND \"sequence\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) AS metric FROM readings AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE (COALESCE(a.\"device\", e.\"device\") = 3 AND COALESCE(a.\"enabled\", e.\"enabled\") = FALSE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE (\"device\" = 4 AND \"sequence\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) AS metric FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE (COALESCE(a.\"device\", e.\"device\") = 4 AND COALESCE(a.\"enabled\", e.\"enabled\") = TRUE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-unknown-row-loss",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-unknown-row-loss",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-unknown-row-loss",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-unknown-row-loss",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE (\"device\" = 2 AND \"sequence\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-unknown-row-loss",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) AS metric FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE (COALESCE(a.\"device\", e.\"device\") = 2 AND COALESCE(a.\"enabled\", e.\"enabled\") = FALSE)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT device, COUNT(*) AS n FROM tags GROUP BY device) SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b LEFT JOIN tag_groups AS t ON b.device = t.device LEFT JOIN dimensions AS d ON b.device = d.device WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT device, COUNT(*) AS n FROM tags GROUP BY device) SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) AS metric FROM readings AS b LEFT JOIN tag_groups AS t ON b.device = t.device LEFT JOIN dimensions AS d ON b.device = d.device WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.device, b.sequence, COUNT(*) AS __multiplicity FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.sequence HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"readings\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-readings-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"device\", e.\"device\") AS \"device\", COALESCE(a.\"enabled\", e.\"enabled\") AS \"enabled\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"device\", \"enabled\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.device, b.enabled, AVG(COALESCE(b.value, 0)) + 0.000049 AS metric FROM readings AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.device, b.enabled) AS result GROUP BY \"device\", \"enabled\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"device\", b.\"enabled\", AVG(COALESCE(b.\"value\", 0)) AS \"metric\"\nFROM \"readings\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"device\", b.\"enabled\"\nORDER BY b.\"device\", b.\"enabled\") AS expected_result) AS e ON a.\"device\" IS NOT DISTINCT FROM e.\"device\" AND a.\"enabled\" IS NOT DISTINCT FROM e.\"enabled\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b LEFT JOIN tags AS t ON b.warehouse = t.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-repeated-branch",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b LEFT JOIN tags AS t ON b.warehouse = t.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE (\"warehouse\" = 3 AND \"sku\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b WHERE b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE (COALESCE(a.\"warehouse\", e.\"warehouse\") = 3)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE (\"warehouse\" = 4 AND \"sku\" = 1)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE (COALESCE(a.\"warehouse\", e.\"warehouse\") = 4)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-unknown-row-loss",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-unknown-row-loss",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-unknown-row-loss",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-unknown-row-loss",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE (\"warehouse\" = 2 AND \"sku\" = 2)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-unknown-row-loss",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND NOT b.value IS NULL GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT warehouse, COUNT(*) AS n FROM tags GROUP BY warehouse) SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b LEFT JOIN tag_groups AS t ON b.warehouse = t.warehouse LEFT JOIN dimensions AS d ON b.warehouse = d.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT warehouse, COUNT(*) AS n FROM tags GROUP BY warehouse) SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b LEFT JOIN tag_groups AS t ON b.warehouse = t.warehouse LEFT JOIN dimensions AS d ON b.warehouse = d.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.warehouse, b.sku, COUNT(*) AS __multiplicity FROM inventory AS b INNER JOIN dimensions AS d ON b.warehouse = d.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse, b.sku HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"inventory\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-inventory-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"warehouse\", e.\"warehouse\") AS \"warehouse\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"warehouse\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.warehouse, COUNT(DISTINCT b.value) AS metric FROM inventory AS b INNER JOIN dimensions AS d ON b.warehouse = d.warehouse WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.warehouse) AS result GROUP BY \"warehouse\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"warehouse\", COUNT(DISTINCT b.\"value\") AS \"metric\"\nFROM \"inventory\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"warehouse\"\nORDER BY b.\"warehouse\") AS expected_result) AS e ON a.\"warehouse\" IS NOT DISTINCT FROM e.\"warehouse\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-repeated-branch",
+      "check_id": "grain",
+      "expected_count": 5,
+      "diagnostic_sql": "SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b LEFT JOIN tags AS t ON b.session = t.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 5,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-repeated-branch",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-repeated-branch",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-repeated-branch",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-repeated-branch",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.channel, AVG(b.value) AS metric FROM sessions AS b LEFT JOIN tags AS t ON b.session = t.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-missing-zero-entity",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.session <> 5 GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-missing-zero-entity",
+      "check_id": "population",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE (\"session\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-missing-zero-entity",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE (\"session\" = 5)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-missing-zero-entity",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-missing-zero-entity",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.channel, AVG(b.value) AS metric FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' AND b.session <> 5 GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-inclusive-end",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-inclusive-end",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-inclusive-end",
+      "check_id": "dates",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE (\"session\" = 7)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-inclusive-end",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-inclusive-end",
+      "check_id": "results",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.channel, AVG(b.value) AS metric FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred <= '2026-02-01' GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE (COALESCE(a.\"channel\", e.\"channel\") = 'A')",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-unknown-denominator",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-unknown-denominator",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-unknown-denominator",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-unknown-denominator",
+      "check_id": "nulls",
+      "expected_count": 1,
+      "diagnostic_sql": "SELECT b.channel, COUNT(*) AS observed_denominator, COUNT(b.value) AS expected_denominator FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.channel HAVING COUNT(*) <> COUNT(b.value)",
+      "observed_count": 1,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-unknown-denominator",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.channel, SUM(b.value) / COUNT(*) AS metric FROM sessions AS b WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-preaggregate-and-dimension",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "WITH tag_groups AS (SELECT session, COUNT(*) AS n FROM tags GROUP BY session) SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b LEFT JOIN tag_groups AS t ON b.session = t.session LEFT JOIN dimensions AS d ON b.session = d.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-preaggregate-and-dimension",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-preaggregate-and-dimension",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-preaggregate-and-dimension",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-preaggregate-and-dimension",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (WITH tag_groups AS (SELECT session, COUNT(*) AS n FROM tags GROUP BY session) SELECT b.channel, AVG(b.value) AS metric FROM sessions AS b LEFT JOIN tag_groups AS t ON b.session = t.session LEFT JOIN dimensions AS d ON b.session = d.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-rounding-or-many-to-one",
+      "check_id": "grain",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT b.session, COUNT(*) AS __multiplicity FROM sessions AS b INNER JOIN dimensions AS d ON b.session = d.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.session HAVING COUNT(*) > 1",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-rounding-or-many-to-one",
+      "check_id": "population",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-rounding-or-many-to-one",
+      "check_id": "dates",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-rounding-or-many-to-one",
+      "check_id": "nulls",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT * FROM \"sessions\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    },
+    {
+      "case_id": "v2-sessions-rounding-or-many-to-one",
+      "check_id": "results",
+      "expected_count": 0,
+      "diagnostic_sql": "SELECT COALESCE(a.\"channel\", e.\"channel\") AS \"channel\", a.__value AS original, e.\"metric\" AS reference FROM (SELECT \"channel\", COUNT(*) AS __n, MAX(\"metric\") AS __value FROM (SELECT b.channel, AVG(b.value) AS metric FROM sessions AS b INNER JOIN dimensions AS d ON b.session = d.session WHERE b.state IN ('included') AND b.occurred >= '2026-01-01' AND b.occurred < '2026-02-01' GROUP BY b.channel) AS result GROUP BY \"channel\") AS a FULL OUTER JOIN (SELECT *, 1 AS __present FROM (SELECT b.\"channel\", AVG(b.\"value\") AS \"metric\"\nFROM \"sessions\" AS b\nWHERE \"b\".\"state\" IN ('included') AND \"b\".\"occurred\" >= '2026-01-01' AND \"b\".\"occurred\" < '2026-02-01'\nGROUP BY b.\"channel\"\nORDER BY b.\"channel\") AS expected_result) AS e ON a.\"channel\" IS NOT DISTINCT FROM e.\"channel\" WHERE FALSE",
+      "observed_count": 0,
+      "passed": true
+    }
+  ]
+}

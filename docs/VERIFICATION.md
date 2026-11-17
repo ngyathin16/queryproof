@@ -1,6 +1,31 @@
 # Verification
 
-Status: working local preview, **not full PRD acceptance**, 16 November 2026 (Asia/Hong_Kong).
+Status: verified bounded local workflow, 17 November 2026 (Asia/Hong_Kong). See [acceptance map](ACCEPTANCE.md) for Q1–Q9 and explicit scope limits. The previous preview record below remains historical evidence.
+
+## 17 November acceptance update
+
+Runtime and evaluator: `5e7e97b`. This version fixes a ratio-denominator false pass, rejects lossy/nonfinite imports, and supports declared chained relationship paths. The [source hashes and completion check](../evaluation/v2/pinned-model-comparison/completion.json) confirm the implementation did not change during the complete new comparison. Prior measurements remain associated with their original revisions.
+
+- A clean checkout installed locked dependencies and passed **45/45 Python tests on Windows and Ubuntu/WSL**. [Windows log](evidence/acceptance-windows-tests.txt), [Linux log](evidence/acceptance-linux-tests.txt). Clean Windows `npm ci` and TypeScript/production build passed. Linux UI/browser execution was not repeated.
+- The running interface passed **21 workflow checks** and **12 responsive accessibility views** at 360, 768 and 1440 px, with no page overflow or automated WCAG-tagged violations. [Browser record](browser-verification.json) and screenshots were refreshed. The existing captioned walkthrough accurately depicts the unchanged flagship workflow and keeps its original capture date.
+- The [new frozen evaluation](../evaluation/v2/manifest.json) passed **59/60 first-execution statuses**: 23/24 incorrect detected, 12/12 valid accepted, 24/24 underspecified/unsupported kept unverified. [Original miss](../evaluation/v2/first-execution/summary.json). After the denominator correction, **60/60 regression statuses** matched, **180/180 witness counts** reproduced, and **48/48 known solutions** passed independent groups/population grading. [Regression](../evaluation/v2/pinned-model-comparison/summary.json), [witnesses](../evaluation/v2/witness-verification.json), [solutions](../evaluation/v2/known-solution-check.json). Version-one development/evaluation remain **120/120** under the new runtime. Inspected suites are regression evidence afterward.
+
+The refreshed local Qwen3.5 9B comparison covers 24 repairable structural cases, three trials per mode, with **144 retained trials**. Both modes receive the same task/settings/budgets. Hidden grading checks independent expected groups/population plus executed semantic checks, preventing coincidentally correct ratios or totals from counting as repaired.
+
+| Mode | Successful executed repairs | Failed assistance | Assistance time | Input / output tokens |
+| --- | ---: | ---: | ---: | ---: |
+| Without diagnostic tools | 12 / 72 | 6 / 72 | 117.827 s | 52,809 / 10,209 |
+| With QueryProof tools | 57 / 72 | 12 / 72 | 218.120 s | 557,175 / 15,708 |
+
+[Trials](../evaluation/v2/pinned-model-comparison/model-trials.jsonl) and [summary](../evaluation/v2/pinned-model-comparison/model-summary.json) retain every failure. More repairs succeeded on these synthetic cases at greater time/input-token cost; temperature-zero repeats are descriptive, not independent significance evidence or general analytical accuracy.
+
+The **agent-authored explanation review** inspected unique explanations against original SQL, schema and executed findings; repeated explanations receive the same assessment. This is not human validation. [Per-trial rubric](../evaluation/v2/pinned-model-comparison/explanation-review.json) retains all 72 trials per mode. In tools mode, 48 explanations were supported, 12 contained misleading facts, and 12 were unavailable after provider failure. Nine misleading explanations accompanied snapshot-correct repairs, including invented `enabled` filters and `sku` join references. No completed explanation explicitly stated the snapshot limit; the UI supplies a separate limitation notice. Executed evidence remains the correctness authority.
+
+No paid/hosted inference occurred. No human usability participants were available. Broader cross-table metric sources, non-UTC interpretation and production hosting remain unsupported. The new [100,000-row benchmark](evidence/benchmark-acceptance.json) retains all 31 observations, failures and machine conditions; it is a desktop engine measurement, not a laptop/browser latency claim.
+
+## Historical 16 November preview record
+
+The sections below describe the original `7fd67e2` measurements and gaps known on that date. Current structural coverage and explanation review are reported above.
 
 ## Reproducible implementation
 

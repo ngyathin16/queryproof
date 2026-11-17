@@ -24,4 +24,4 @@ Only an explicitly requested assistance run receives contract/schema/SQL and bou
 
 ## Scope
 
-This implementation deliberately has one local operator, one SQL dialect and application-owned snapshots. It is not a hosted query executor or a universal SQL correctness checker. Some contract forms and otherwise permitted SQL shapes remain unsupported; see the verification record and explicit messages in the application. Unsupported cases must not be counted as verified. A release requires evidence beyond a successful flagship example, including structural evaluation coverage and human-reviewed expectations.
+This implementation has one local operator, one SQL dialect and application-owned snapshots. It is not a hosted query executor or a universal SQL correctness checker. Some contract forms remain unsupported; see the acceptance map and explicit messages in the application. Unsupported cases must not be counted as verified. Structural evaluation uses independently calculated row-oracle expectations; human review and broader real-world validation remain external follow-up work.

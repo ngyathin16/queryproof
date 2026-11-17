@@ -2,7 +2,7 @@
 
 A local workbench for analysts reviewing SQL business metrics. Compare a query with an explicit metric contract, inspect the rows behind a discrepancy, try a revision, and export evidence another reviewer can reproduce.
 
-**Work in progress.** This implementation has not passed every release gate. See [verification](docs/VERIFICATION.md) for actual checks and outstanding work. Successful SQL execution is not proof that a business definition is correct.
+**Verified local workflow, with explicit scope limits.** See the [requirement/evidence map](docs/ACCEPTANCE.md) and [verification](docs/VERIFICATION.md). Successful SQL execution is not proof that a business definition is correct.
 
 ![A running QueryProof review showing 1,110 USD from the original query, 400 USD from the independent reference, and duplicated-order evidence](docs/screenshots/review-1440.png)
 

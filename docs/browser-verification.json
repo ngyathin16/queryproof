@@ -1,8 +1,8 @@
 {
-  "captured_at": "2026-11-16T06:50:25.763Z",
-  "browser": "157.0.4341.57",
+  "captured_at": "2026-11-17T06:07:02.144Z",
+  "browser": "157.0.4341.60",
   "platform": "win32",
-  "base": "http://127.0.0.1:4317",
+  "base": "http://127.0.0.1:4327",
   "checks": [
     "Keyboard skip link focuses the workbench",
     "initial: 360, 768, 1440 px; no page overflow or axe WCAG 2.2 A/AA findings",

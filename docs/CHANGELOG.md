@@ -28,4 +28,4 @@
 - Recorded all 144 final local-model trials, 120 deterministic cases, 180 reproduced witness queries and the 100,000-row benchmark. Retained earlier failures and the interrupted attempt.
 - Published public source, screenshots, a captioned walkthrough and API-key setup instructions. Release acceptance remains open.
 
-This remains work in progress. Actual verification outcomes and release gaps are in [VERIFICATION.md](VERIFICATION.md).
+Actual verification outcomes and bounded-scope limitations are in [VERIFICATION.md](VERIFICATION.md).

@@ -1,0 +1,76 @@
+test_date_does_not_silently_discard_time (test_acceptance.AcceptanceBoundaries.test_date_does_not_silently_discard_time) ... ok
+test_import_rejects_double_overflow_and_invalid_empty_schema (test_acceptance.AcceptanceBoundaries.test_import_rejects_double_overflow_and_invalid_empty_schema) ... ok
+test_ratio_denominator_is_checked_when_all_numerators_are_zero (test_acceptance.AcceptanceBoundaries.test_ratio_denominator_is_checked_when_all_numerators_are_zero) ... ok
+test_relationship_paths_can_traverse_a_declared_dimension (test_acceptance.AcceptanceBoundaries.test_relationship_paths_can_traverse_a_declared_dimension) ... ok
+test_cancel_timeout_recovery (test_engine.EngineTests.test_cancel_timeout_recovery) ... ok
+test_coincidental_null_results_do_not_hide_wrong_denominator (test_engine.EngineTests.test_coincidental_null_results_do_not_hide_wrong_denominator) ... ok
+test_contract_filters_follow_declared_column_types (test_engine.EngineTests.test_contract_filters_follow_declared_column_types) ... ok
+test_decimal_distinct_and_null_zero_are_numeric (test_engine.EngineTests.test_decimal_distinct_and_null_zero_are_numeric) ... ok
+test_execution_failure_remains_failure (test_engine.EngineTests.test_execution_failure_remains_failure) ... ok
+test_import_validation_identity_and_bounds (test_engine.EngineTests.test_import_validation_identity_and_bounds) ... ok
+test_join_evidence_and_executed_repair (test_engine.EngineTests.test_join_evidence_and_executed_repair) ... ok
+test_large_decimals_keep_exact_cents_and_headline (test_engine.EngineTests.test_large_decimals_keep_exact_cents_and_headline) ... ok
+test_missing_definition_cannot_pass (test_engine.EngineTests.test_missing_definition_cannot_pass) ... ok
+test_null_denominator_and_repair (test_engine.EngineTests.test_null_denominator_and_repair) ... ok
+test_population_and_date_boundaries (test_engine.EngineTests.test_population_and_date_boundaries) ... ok
+test_preaggregated_branches_pass (test_engine.EngineTests.test_preaggregated_branches_pass) ... ok
+test_rounding_and_near_boundary (test_engine.EngineTests.test_rounding_and_near_boundary) ... ok
+test_undeclared_paths_and_incorrect_cardinality_cannot_pass (test_engine.EngineTests.test_undeclared_paths_and_incorrect_cardinality_cannot_pass) ... ok
+test_unsupported_sql (test_engine.EngineTests.test_unsupported_sql) ... ok
+test_worker_blocks_external_access_even_without_parser (test_engine.EngineTests.test_worker_blocks_external_access_even_without_parser) ... ok
+test_wrapped_denominators_cannot_hide_behind_zero_results (test_engine.EngineTests.test_wrapped_denominators_cannot_hide_behind_zero_results) ... ok
+test_zero_measure_does_not_hide_population_loss (test_engine.EngineTests.test_zero_measure_does_not_hide_population_loss) ... ok
+test_cancelled_assistance_never_finishes_successfully (test_provider.ProviderBoundaryTests.test_cancelled_assistance_never_finishes_successfully) ... ok
+test_contract_changes_cannot_be_smuggled_into_a_proposal (test_provider.ProviderBoundaryTests.test_contract_changes_cannot_be_smuggled_into_a_proposal) ... ok
+test_external_endpoint_is_not_accepted (test_provider.ProviderBoundaryTests.test_external_endpoint_is_not_accepted) ... ok
+test_hosted_configuration_never_contains_secret (test_provider.ProviderBoundaryTests.test_hosted_configuration_never_contains_secret) ... ok
+test_hosted_configuration_requires_key_and_explicit_model (test_provider.ProviderBoundaryTests.test_hosted_configuration_requires_key_and_explicit_model) ... ok
+test_hosted_endpoint_requires_https (test_provider.ProviderBoundaryTests.test_hosted_endpoint_requires_https) ... ok
+test_hosted_request_transforms_protocol_and_usage (test_provider.ProviderBoundaryTests.test_hosted_request_transforms_protocol_and_usage) ... ok
+test_incomplete_response_is_not_success (test_provider.ProviderBoundaryTests.test_incomplete_response_is_not_success) ... ok
+test_invented_evidence_id_is_rejected (test_provider.ProviderBoundaryTests.test_invented_evidence_id_is_rejected) ... ok
+test_invented_numeric_claim_is_rejected (test_provider.ProviderBoundaryTests.test_invented_numeric_claim_is_rejected) ... ok
+test_known_evidence_number_and_id_are_accepted (test_provider.ProviderBoundaryTests.test_known_evidence_number_and_id_are_accepted) ... ok
+test_malformed_assistance_preserves_deterministic_result (test_provider.ProviderBoundaryTests.test_malformed_assistance_preserves_deterministic_result) ... ok
+test_malformed_provider_json_is_a_failure (test_provider.ProviderBoundaryTests.test_malformed_provider_json_is_a_failure) ... ok
+test_missing_usage_cannot_bypass_token_budget (test_provider.ProviderBoundaryTests.test_missing_usage_cannot_bypass_token_budget) ... ok
+test_oversized_provider_response_is_rejected (test_provider.ProviderBoundaryTests.test_oversized_provider_response_is_rejected) ... ok
+test_provider_error_does_not_echo_secret (test_provider.ProviderBoundaryTests.test_provider_error_does_not_echo_secret) ... ok
+test_provider_redirect_cannot_forward_authorization (test_provider.ProviderBoundaryTests.test_provider_redirect_cannot_forward_authorization) ... ok
+test_repeated_tool_requests_stop_at_budget (test_provider.ProviderBoundaryTests.test_repeated_tool_requests_stop_at_budget) ... ok
+test_unsupported_revision_can_be_returned_to_model (test_provider.ProviderBoundaryTests.test_unsupported_revision_can_be_returned_to_model) ... ok
+test_cancel_cannot_later_be_completed (test_server.ApiTests.test_cancel_cannot_later_be_completed) ... 127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/examples HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/snapshots HTTP/1.1" 201 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/runs HTTP/1.1" 202 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/runs/686c1c3bf78043ff99c7c112c757fe5d/cancel HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/686c1c3bf78043ff99c7c112c757fe5d HTTP/1.1" 200 -
+ok
+test_local_request_boundary (test_server.ApiTests.test_local_request_boundary) ... 127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/examples HTTP/1.1" 403 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/examples HTTP/1.1" 403 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/examples HTTP/1.1" 403 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/snapshots HTTP/1.1" 400 -
+ok
+test_review_repair_history_and_export (test_server.ApiTests.test_review_repair_history_and_export) ... 127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/examples HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/snapshots HTTP/1.1" 201 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/runs HTTP/1.1" 202 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/runs/40d49f82a4e04fc19dab7071ac980dd5/assist HTTP/1.1" 400 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "POST /api/runs HTTP/1.1" 202 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/93701033e8a447ec9b125ef62aa21749 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/93701033e8a447ec9b125ef62aa21749 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:05] "GET /api/runs/93701033e8a447ec9b125ef62aa21749 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:06] "GET /api/runs/93701033e8a447ec9b125ef62aa21749 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:06] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:06] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5/export HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:06] "GET /api/runs/40d49f82a4e04fc19dab7071ac980dd5/export?format=html HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 14:07:06] "GET /api/snapshots/232282510cc0d68566eadfc8a457b9fa992f81e1f438b6f718583355622afab0 HTTP/1.1" 200 -
+ok
+test_restart_marks_unfinished_review_interrupted (test_server.PersistenceTests.test_restart_marks_unfinished_review_interrupted) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 19.554s
+
+OK
